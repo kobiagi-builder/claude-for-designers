@@ -170,7 +170,7 @@ Before proceeding, score your understanding (0-100):
 | Interaction Coverage | Do I know all states and transitions? |
 | Edge Cases | Have I considered what happens with varying content? |
 
-**If confidence < 90%**: Re-examine the Figma design context data and screenshot. Fetch additional child nodes if needed. Do NOT proceed until confidence >= 90%.
+**If confidence < 98%**: ask the user clarifing questions using askUserQuestions tool. Do NOT proceed until confidence >= 98%.
 
 ### Step 5: Download Required Assets
 
