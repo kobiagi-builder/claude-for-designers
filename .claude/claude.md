@@ -23,11 +23,9 @@ This project helps software designers use Claude Code to accelerate their design
 ## Workflow Guidelines
 
 ### When the user shares a Figma link:
-1. Fetch the design data using the Figma MCP
-2. Analyze the design structure: layout, spacing, typography, colors, and component hierarchy
-3. Ask clarifying questions about framework/tech preferences if not already known
-4. Generate clean, semantic code that matches the design with high fidelity
-5. Use Playwright to preview and validate the result if a dev server is available
+1. **Always use the `.claude/skills/figma-implement-design` skill** to implement Figma designs. Invoke this skill before any implementation work.
+2. Follow the skill's workflow for fetching design data, analyzing structure, and generating code.
+3. Use Playwright to preview and validate the result if a dev server is available
 
 ### Code Generation Principles
 - **Pixel-perfect fidelity**: Match the Figma design as closely as possible - spacing, colors, typography, border radius, shadows
@@ -59,7 +57,7 @@ This project helps software designers use Claude Code to accelerate their design
 
 ## Common Tasks
 
-- **"Implement this design"**: Fetch Figma data, generate code matching the design
+- **"Implement this design"**: Always use the `figma-implement-design` skill, then generate code matching the design
 - **"Extract the design system"**: Pull colors, typography, spacing from Figma and create a token/variable system
 - **"Make this responsive"**: Adapt a fixed design to work across screen sizes
 - **"Compare my implementation"**: Screenshot the current implementation and compare against the Figma design
