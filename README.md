@@ -12,16 +12,13 @@ Turn your Figma designs into production-ready code using Claude Code. This proje
 
 ## Prerequisites
 
-All you need before running the installer:
-
-1. **A Mac or Linux computer** with Terminal access
-2. **A Figma account** — you'll be asked for your API key during setup (the installer walks you through it)
-
-The installer automatically installs Git, Node.js, and Claude Code if they're missing.
+1. **Cursor or VS Code** with the Claude Code extension installed
+2. **Node.js** (v18 or later) — [Download](https://nodejs.org/)
+3. **A Figma account** — you'll be asked for your API key during setup
 
 ## Getting Started
 
-### One-Command Install (Recommended)
+### 1. Run the installer
 
 Open Terminal, navigate to the folder where you want the project, and paste:
 
@@ -30,33 +27,27 @@ curl -sL https://raw.githubusercontent.com/kobiagi-builder/claude-for-designers/
 ```
 
 The installer will:
-1. Check that Git, Node.js, and Claude Code are installed
-2. Clone the repository into the current folder
-3. Open Claude Code and start the setup wizard automatically
-4. Ask you for your **Figma API key** (with instructions on where to find it)
-5. Configure both **Figma** and **Playwright** connections
+1. Clone the repository
+2. Ask for your **Figma API key** (with instructions on where to find it)
+3. Configure both **Figma** and **Playwright** connections automatically
 
-After setup, restart Claude Code so the connections load:
+### 2. Open in Cursor or VS Code
 
-```bash
-# Press Ctrl+C to exit, then:
-cd claude-for-designers
-claude
-```
+Open the `claude-for-designers` folder in your IDE. The Figma and Playwright connections will load automatically.
 
-That's it. You're ready to go.
+### 3. Start using it
+
+Open a Claude chat in your IDE and paste any Figma link — Claude will implement it as code.
 
 ### Manual Install (Alternative)
 
-If you prefer to set up step by step:
+If you prefer to set up without the installer:
 
 ```bash
 git clone https://github.com/kobiagi-builder/claude-for-designers.git
-cd claude-for-designers
-claude
 ```
 
-Then type `/prep` inside Claude Code to run the setup wizard.
+Open the folder in Cursor or VS Code, then type `/prep` in a Claude chat to run the setup wizard.
 
 ## How to Get Your Figma API Key
 
@@ -64,7 +55,7 @@ Then type `/prep` inside Claude Code to run the setup wizard.
 2. Click your profile icon (top-left) and go to **Settings**
 3. Scroll down to **Personal Access Tokens**
 4. Click **Generate new token**, give it a name, and copy the key
-5. The key starts with `figd_` — keep it somewhere safe until `/prep` asks for it
+5. The key starts with `figd_` — keep it somewhere safe until the installer asks for it
 
 ## Usage
 
@@ -138,16 +129,16 @@ claude-for-designers/
 ## Troubleshooting
 
 ### "MCP server not found" or Figma commands fail
-Run `/prep` again to reconfigure, then restart Claude Code.
+Run `/prep` in a Claude chat to reconfigure, then restart the Claude extension.
 
 ### "Invalid Figma API key"
 Your key may have expired. Generate a new one in Figma Settings > Personal Access Tokens, then run `/prep` again.
 
 ### Playwright isn't working
-Make sure Node.js is installed (`node --version`). Playwright is downloaded automatically on first use.
+Make sure Node.js is installed (`node --version` in Terminal). Playwright is downloaded automatically on first use.
 
-### Changes not taking effect
-Always restart Claude Code after running `/prep` so the MCP servers reload.
+### MCP servers not showing up after install
+Close and reopen your IDE so the Claude extension reloads the MCP configuration.
 
 ## Security
 

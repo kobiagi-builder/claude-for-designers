@@ -2,35 +2,11 @@
 
 # Claude for Designers — Installer
 # Usage: curl -sL https://raw.githubusercontent.com/kobiagi-builder/claude-for-designers/main/install.sh | bash
-#
-# This script handles everything: installs missing tools, clones the repo,
-# asks for the Figma API key, and configures both MCP servers.
-# The user only needs to paste one command.
 
 set -e
 
 REPO_URL="https://github.com/kobiagi-builder/claude-for-designers.git"
 FOLDER_NAME="claude-for-designers"
-
-# -------------------------------------------------------------------
-# Expand PATH to include common tool locations.
-# curl | bash runs a non-interactive shell that skips .zshrc, so
-# tools installed via nvm, npm, or homebrew may not be on PATH.
-# -------------------------------------------------------------------
-export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
-
-for dir in \
-  "$HOME/.nvm/versions/node"/*/bin \
-  "$HOME/.npm-global/bin" \
-  "/usr/local/bin" \
-  "/opt/homebrew/bin" \
-  "$HOME/bin" \
-  "$HOME/.local/bin"; do
-  case ":$PATH:" in
-    *":$dir:"*) ;;
-    *) [ -d "$dir" ] && export PATH="$dir:$PATH" ;;
-  esac
-done
 
 echo ""
 echo "  Claude for Designers — Installer"
@@ -38,81 +14,58 @@ echo "  ================================="
 echo ""
 
 # -------------------------------------------------------------------
-# 1. Install missing prerequisites automatically
+# 1. Check Git (only hard requirement for cloning)
 # -------------------------------------------------------------------
 
-# --- Git ---
 if ! command -v git &> /dev/null; then
-  echo "  [..] Git not found — installing..."
   if [[ "$OSTYPE" == "darwin"* ]]; then
     xcode-select --install 2>/dev/null || true
-    echo ""
     echo "  A system dialog should appear asking to install Command Line Tools."
     echo "  Click 'Install' and wait for it to finish, then run this command again."
-    echo ""
     exit 0
-  elif command -v apt-get &> /dev/null; then
-    sudo apt-get update -qq && sudo apt-get install -y -qq git
-  elif command -v yum &> /dev/null; then
-    sudo yum install -y -q git
   else
-    echo "  [x] Could not install Git automatically."
-    echo "      Install it from https://git-scm.com/downloads and try again."
+    echo "  [x] Git is required. Install it and try again."
     exit 1
   fi
 fi
 echo "  [ok] Git found"
 
-# --- Node.js ---
-if ! command -v node &> /dev/null || [ "$(node -v | sed 's/v//' | cut -d. -f1)" -lt 18 ]; then
-  echo "  [..] Node.js v18+ not found — installing via nvm..."
+# -------------------------------------------------------------------
+# 2. Check Node.js (needed for MCP servers via npx)
+# -------------------------------------------------------------------
 
-  if [ ! -s "$NVM_DIR/nvm.sh" ]; then
-    curl -sL https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | BASH_ENV=/dev/null bash
-  fi
+# Expand PATH for non-interactive shell
+export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
+for dir in \
+  "$HOME/.nvm/versions/node"/*/bin \
+  "/usr/local/bin" \
+  "/opt/homebrew/bin"; do
+  case ":$PATH:" in
+    *":$dir:"*) ;;
+    *) [ -d "$dir" ] && export PATH="$dir:$PATH" ;;
+  esac
+done
 
-  . "$NVM_DIR/nvm.sh" < /dev/null 2>/dev/null
-
-  nvm install 20
-  nvm use 20
-
-  for dir in "$HOME/.nvm/versions/node"/*/bin; do
-    [ -d "$dir" ] && export PATH="$dir:$PATH"
-  done
-
-  echo "  [ok] Node.js $(node -v) installed via nvm"
-else
-  echo "  [ok] Node.js $(node -v) found"
+if ! command -v node &> /dev/null; then
+  echo ""
+  echo "  [x] Node.js is required for the Figma and Playwright connections."
+  echo "      Install it from https://nodejs.org (v18 or later) and try again."
+  exit 1
 fi
-
-# --- Claude Code ---
-# The user's real terminal may use a different node than what this script's
-# PATH expansion finds (e.g. Homebrew node vs nvm node). We must check
-# whether claude works in the user's actual login shell, not just here.
-USER_SHELL="${SHELL:-/bin/zsh}"
-CLAUDE_IN_LOGIN_SHELL="$($USER_SHELL -lc 'command -v claude' 2>/dev/null)"
-
-if [ -z "$CLAUDE_IN_LOGIN_SHELL" ]; then
-  echo "  [..] Claude Code not found in your terminal — installing..."
-  # Install via the user's login shell so it goes under the node they actually use
-  $USER_SHELL -lc 'npm install -g @anthropic-ai/claude-code' </dev/null
-  echo "  [ok] Claude Code installed"
-else
-  echo "  [ok] Claude Code found"
-fi
+echo "  [ok] Node.js $(node -v) found"
 
 # -------------------------------------------------------------------
-# 2. Clone the repo
+# 3. Clone the repo
 # -------------------------------------------------------------------
 
 if [ -d "$FOLDER_NAME" ]; then
   echo ""
-  echo "  Folder '$FOLDER_NAME' already exists in this directory."
+  echo "  Folder '$FOLDER_NAME' already exists here."
   read -p "  Overwrite it? (y/n): " OVERWRITE </dev/tty
   if [ "$OVERWRITE" = "y" ] || [ "$OVERWRITE" = "Y" ]; then
     rm -rf "$FOLDER_NAME"
   else
-    echo "  Cancelled. Remove or rename the existing folder and try again."
+    echo "  Cancelled."
     exit 1
   fi
 fi
@@ -120,10 +73,10 @@ fi
 echo ""
 echo "  Cloning repository..."
 git clone --quiet "$REPO_URL" "$FOLDER_NAME"
-echo "  [ok] Repository cloned to ./$FOLDER_NAME"
+echo "  [ok] Repository cloned"
 
 # -------------------------------------------------------------------
-# 3. Configure Figma + Playwright MCP servers
+# 4. Ask for Figma API key and write .mcp.json
 # -------------------------------------------------------------------
 
 echo ""
@@ -155,7 +108,6 @@ while [ -z "$FIGMA_KEY" ]; do
   fi
 done
 
-# Write .mcp.json inside the cloned project (gitignored, never committed)
 cat > "$FOLDER_NAME/.mcp.json" << MCPEOF
 {
   "mcpServers": {
@@ -184,7 +136,7 @@ echo "  [ok] Figma configured"
 echo "  [ok] Playwright configured"
 
 # -------------------------------------------------------------------
-# 4. Done
+# 5. Done
 # -------------------------------------------------------------------
 
 FULL_PATH="$(cd "$FOLDER_NAME" && pwd)"
@@ -194,10 +146,9 @@ echo "  ================================="
 echo "  Setup complete!"
 echo "  ================================="
 echo ""
-echo "  Open a NEW terminal window, then run:"
+echo "  Next step: Open this folder in Cursor or VS Code:"
 echo ""
-echo "    cd $FULL_PATH"
-echo "    claude"
+echo "    $FULL_PATH"
 echo ""
-echo "  Then paste any Figma link and Claude will implement it as code."
+echo "  Then start a Claude chat and paste any Figma link."
 echo ""
