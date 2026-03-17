@@ -8,6 +8,25 @@ set -e
 REPO_URL="https://github.com/kobiagi-builder/claude-for-designers.git"
 FOLDER_NAME="claude-for-designers"
 
+# -------------------------------------------------------------------
+# Load the user's shell profile so installed tools are on PATH.
+# curl | bash runs a non-login, non-interactive shell that skips
+# .zshrc / .bash_profile, making nvm, npm globals, etc. invisible.
+# -------------------------------------------------------------------
+load_shell_profile() {
+  export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
+  [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+
+  for f in "$HOME/.bash_profile" "$HOME/.bashrc" "$HOME/.zshrc" "$HOME/.profile"; do
+    if [ -f "$f" ]; then
+      . "$f" 2>/dev/null || true
+      break
+    fi
+  done
+}
+
+load_shell_profile
+
 echo ""
 echo "  Claude for Designers — Installer"
 echo "  ================================="
@@ -62,9 +81,15 @@ else
 fi
 
 # --- Claude Code ---
+# Reload profile in case nvm/npm paths were just set up
+load_shell_profile
+
 if ! command -v claude &> /dev/null; then
   echo "  [..] Claude Code not found — installing..."
   npm install -g @anthropic-ai/claude-code
+  # Add npm global bin to PATH for this session
+  NPM_BIN="$(npm prefix -g)/bin"
+  export PATH="$NPM_BIN:$PATH"
   echo "  [ok] Claude Code installed"
 else
   echo "  [ok] Claude Code found"
