@@ -33,6 +33,7 @@ Write the following to `.mcp.json` at the project root:
 {
   "mcpServers": {
     "figma": {
+      "type": "http",
       "url": "https://mcp.figma.com/mcp"
     },
     "playwright": {

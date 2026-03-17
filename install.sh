@@ -88,6 +88,7 @@ cat > .mcp.json << 'MCPEOF'
 {
   "mcpServers": {
     "figma": {
+      "type": "http",
       "url": "https://mcp.figma.com/mcp"
     },
     "playwright": {
