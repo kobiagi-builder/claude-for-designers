@@ -2,10 +2,10 @@
 
 # Claude for Designers — Installer
 # Usage: curl -sL https://raw.githubusercontent.com/kobiagi-builder/claude-for-designers/main/install.sh | bash
-
-# IMPORTANT: This script is read from stdin via curl | bash.
-# Never source external files without redirecting stdin from /dev/null,
-# or the sourced file will consume the rest of this script.
+#
+# This script handles everything: installs missing tools, clones the repo,
+# asks for the Figma API key, and configures both MCP servers.
+# The user only needs to paste one command.
 
 set -e
 
@@ -14,8 +14,8 @@ FOLDER_NAME="claude-for-designers"
 
 # -------------------------------------------------------------------
 # Expand PATH to include common tool locations.
-# curl | bash skips .zshrc/.bash_profile, so tools like node, npm,
-# and claude are invisible. We add known directories directly.
+# curl | bash runs a non-interactive shell that skips .zshrc, so
+# tools installed via nvm, npm, or homebrew may not be on PATH.
 # -------------------------------------------------------------------
 export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
 
@@ -71,13 +71,11 @@ if ! command -v node &> /dev/null || [ "$(node -v | sed 's/v//' | cut -d. -f1)" 
     curl -sL https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | BASH_ENV=/dev/null bash
   fi
 
-  # Source nvm with stdin from /dev/null so it doesn't consume our script
   . "$NVM_DIR/nvm.sh" < /dev/null 2>/dev/null
 
   nvm install 20
   nvm use 20
 
-  # Add the newly installed node to PATH
   for dir in "$HOME/.nvm/versions/node"/*/bin; do
     [ -d "$dir" ] && export PATH="$dir:$PATH"
   done
@@ -91,7 +89,6 @@ fi
 if ! command -v claude &> /dev/null; then
   echo "  [..] Claude Code not found — installing..."
   npm install -g @anthropic-ai/claude-code
-  # Add npm global bin to PATH for this session
   NPM_GLOBAL_BIN="$(npm prefix -g 2>/dev/null)/bin"
   export PATH="$NPM_GLOBAL_BIN:$PATH"
   echo "  [ok] Claude Code installed"
@@ -121,17 +118,79 @@ git clone --quiet "$REPO_URL" "$FOLDER_NAME"
 echo "  [ok] Repository cloned to ./$FOLDER_NAME"
 
 # -------------------------------------------------------------------
-# 3. Launch Claude Code with /prep
+# 3. Configure Figma + Playwright MCP servers
 # -------------------------------------------------------------------
 
 echo ""
 echo "  ================================="
-echo "  Almost done!"
+echo "  Figma Setup"
 echo "  ================================="
 echo ""
-echo "  Claude Code is opening now."
-echo "  It will ask for your Figma API key to finish setup."
+echo "  To connect to Figma, you need a Personal Access Token."
+echo ""
+echo "  How to get one:"
+echo "    1. Open Figma and go to Settings"
+echo "    2. Scroll to 'Personal Access Tokens'"
+echo "    3. Click 'Generate new token' and copy it"
+echo "    4. It starts with figd_"
 echo ""
 
-cd "$FOLDER_NAME"
-claude "/prep"
+FIGMA_KEY=""
+while [ -z "$FIGMA_KEY" ]; do
+  read -p "  Paste your Figma API key here: " FIGMA_KEY </dev/tty
+  if [ -z "$FIGMA_KEY" ]; then
+    echo "  Key cannot be empty. Please try again."
+  elif [[ "$FIGMA_KEY" != figd_* ]]; then
+    echo ""
+    echo "  That doesn't look like a Figma key (should start with figd_)."
+    read -p "  Use it anyway? (y/n): " USE_ANYWAY </dev/tty
+    if [ "$USE_ANYWAY" != "y" ] && [ "$USE_ANYWAY" != "Y" ]; then
+      FIGMA_KEY=""
+    fi
+  fi
+done
+
+# Write .mcp.json inside the cloned project (gitignored, never committed)
+cat > "$FOLDER_NAME/.mcp.json" << MCPEOF
+{
+  "mcpServers": {
+    "figma": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "figma-developer-mcp",
+        "--figma-api-key=${FIGMA_KEY}",
+        "--stdio"
+      ]
+    },
+    "playwright": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@anthropic-ai/mcp-server-playwright"
+      ]
+    }
+  }
+}
+MCPEOF
+
+echo ""
+echo "  [ok] Figma configured"
+echo "  [ok] Playwright configured"
+
+# -------------------------------------------------------------------
+# 4. Done
+# -------------------------------------------------------------------
+
+echo ""
+echo "  ================================="
+echo "  Setup complete!"
+echo "  ================================="
+echo ""
+echo "  To start, run:"
+echo ""
+echo "    cd $FOLDER_NAME"
+echo "    claude"
+echo ""
+echo "  Then paste any Figma link and Claude will implement it as code."
+echo ""
