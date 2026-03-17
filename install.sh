@@ -136,7 +136,7 @@ echo "  [ok] Figma configured"
 echo "  [ok] Playwright configured"
 
 # -------------------------------------------------------------------
-# 5. Done
+# 5. Open in Cursor or VS Code automatically
 # -------------------------------------------------------------------
 
 FULL_PATH="$(cd "$FOLDER_NAME" && pwd)"
@@ -146,9 +146,26 @@ echo "  ================================="
 echo "  Setup complete!"
 echo "  ================================="
 echo ""
-echo "  Next step: Open this folder in Cursor or VS Code:"
-echo ""
-echo "    $FULL_PATH"
-echo ""
-echo "  Then start a Claude chat and paste any Figma link."
+
+OPENED=false
+if command -v cursor &> /dev/null; then
+  echo "  Opening in Cursor..."
+  cursor "$FULL_PATH"
+  OPENED=true
+elif command -v code &> /dev/null; then
+  echo "  Opening in VS Code..."
+  code "$FULL_PATH"
+  OPENED=true
+fi
+
+if [ "$OPENED" = true ]; then
+  echo ""
+  echo "  Start a Claude chat and paste any Figma link."
+else
+  echo "  Open this folder in Cursor or VS Code:"
+  echo ""
+  echo "    $FULL_PATH"
+  echo ""
+  echo "  Then start a Claude chat and paste any Figma link."
+fi
 echo ""
