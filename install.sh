@@ -86,11 +86,12 @@ else
 fi
 
 # --- Claude Code ---
-if ! command -v claude &> /dev/null; then
-  echo "  [..] Claude Code not found — installing..."
+# claude may exist under an inactive nvm node version but not the current one.
+# Check the current node's bin specifically, not just any PATH match.
+CURRENT_NODE_BIN="$(dirname "$(which node)" 2>/dev/null)"
+if [ -z "$CURRENT_NODE_BIN" ] || [ ! -x "$CURRENT_NODE_BIN/claude" ]; then
+  echo "  [..] Installing Claude Code for Node $(node -v)..."
   npm install -g @anthropic-ai/claude-code
-  NPM_GLOBAL_BIN="$(npm prefix -g 2>/dev/null)/bin"
-  export PATH="$NPM_GLOBAL_BIN:$PATH"
   echo "  [ok] Claude Code installed"
 else
   echo "  [ok] Claude Code found"
@@ -182,14 +183,16 @@ echo "  [ok] Playwright configured"
 # 4. Done
 # -------------------------------------------------------------------
 
+FULL_PATH="$(cd "$FOLDER_NAME" && pwd)"
+
 echo ""
 echo "  ================================="
 echo "  Setup complete!"
 echo "  ================================="
 echo ""
-echo "  To start, run:"
+echo "  Open a NEW terminal window, then run:"
 echo ""
-echo "    cd $FOLDER_NAME"
+echo "    cd $FULL_PATH"
 echo "    claude"
 echo ""
 echo "  Then paste any Figma link and Claude will implement it as code."
