@@ -56,7 +56,7 @@ Write the following to `.mcp.json` at the project root, inserting the user's Fig
       "command": "npx",
       "args": [
         "-y",
-        "@anthropic-ai/mcp-server-playwright"
+        "@playwright/mcp"
       ]
     }
   }

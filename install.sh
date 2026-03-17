@@ -129,7 +129,7 @@ cat > .mcp.json << MCPEOF
       "command": "npx",
       "args": [
         "-y",
-        "@anthropic-ai/mcp-server-playwright"
+        "@playwright/mcp"
       ]
     }
   }
