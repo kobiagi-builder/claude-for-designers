@@ -1,7 +1,7 @@
 {
   "version": 1,
   "skills": {
-    "figma-implement-design": {
+    "implement-figma-design-lite": {
       "source": "openai/skills",
       "sourceType": "github",
       "computedHash": "d6f7141e613b102b1c4b0abb392b4d5b57d2a7ea5d0036cfea85038dc24120ed"

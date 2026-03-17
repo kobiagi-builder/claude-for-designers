@@ -114,8 +114,8 @@ claude-for-designers/
 │   │   └── component-library-first.md     # Reuse existing components first
 │   └── skills/
 │       ├── prep/                           # Setup wizard (/prep)
-│       ├── figma-implement-design-v1/      # Single component workflow
-│       ├── implement-figma-design-v2/      # Full multi-phase workflow
+│       ├── implement-figma-design-lite/     # Single component workflow
+│       ├── implement-figma-design-advanced/ # Full multi-phase workflow
 │       └── webapp-testing/                 # Browser preview and testing
 ├── src/                                    # Your generated code goes here
 ├── install.sh                              # One-command installer

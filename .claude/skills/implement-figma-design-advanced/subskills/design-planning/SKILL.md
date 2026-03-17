@@ -1,6 +1,6 @@
 ---
 name: design-planning
-description: Internal implement-figma-design subskill for writing Figma implementation plans — do not invoke directly.
+description: Internal implement-figma-design-advanced subskill for writing Figma implementation plans — do not invoke directly.
 ---
 
 ## Writing Figma Implementation Plans

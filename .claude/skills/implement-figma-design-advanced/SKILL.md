@@ -1,5 +1,5 @@
 ---
-name: "implement-figma-design"
+name: "implement-figma-design-advanced"
 description: "Structured multi-phase Figma-to-code workflow with iterative planning, execution, and Playwright validation. Trigger when the user provides Figma URLs with a description of the flow to implement. Requires Figma MCP and Playwright MCP connections."
 ---
 

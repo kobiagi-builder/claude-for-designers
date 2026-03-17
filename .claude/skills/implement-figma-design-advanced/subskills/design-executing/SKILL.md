@@ -1,6 +1,6 @@
 ---
 name: design-executing
-description: Internal implement-figma-design subskill for executing Figma implementation plans — do not invoke directly.
+description: Internal implement-figma-design-advanced subskill for executing Figma implementation plans — do not invoke directly.
 ---
 
 ## Executing Figma Implementation Plans

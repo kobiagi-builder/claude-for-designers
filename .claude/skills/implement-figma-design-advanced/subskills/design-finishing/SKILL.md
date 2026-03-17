@@ -1,6 +1,6 @@
 ---
 name: design-finishing
-description: Internal implement-figma-design subskill for completing design implementation — do not invoke directly.
+description: Internal implement-figma-design-advanced subskill for completing design implementation — do not invoke directly.
 ---
 
 ## Finishing a Design Implementation

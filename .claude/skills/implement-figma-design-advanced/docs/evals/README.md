@@ -1,6 +1,6 @@
 # Eval Notes
 
-This folder holds eval candidates for the implement-figma-design skill, recovered from real runs.
+This folder holds eval candidates for the implement-figma-design-advanced skill, recovered from real runs.
 
 ## Default Run Protocol
 

@@ -1,12 +1,12 @@
-# implement-figma-design
+# implement-figma-design-advanced
 
 This directory is a skill for Claude Code. It translates Figma designs into production-ready code using a multi-phase planning, execution, and Playwright-validated review workflow.
 
-## If you are here to use implement-figma-design
+## If you are here to use implement-figma-design-advanced
 
 Follow the instructions in the project's CLAUDE.md. Provide a Figma link and a short description of the flow, and the skill orchestrates the rest.
 
-## If you are here to work on implement-figma-design
+## If you are here to work on implement-figma-design-advanced
 
 ### Structure
 
@@ -39,7 +39,7 @@ Follow the instructions in the project's CLAUDE.md. Provide a Figma link and a s
 
 ### Key Differences from trycycle
 
-| Aspect | trycycle | implement-figma-design |
+| Aspect | trycycle | implement-figma-design-advanced |
 |--------|----------|----------------------|
 | Input | Any code task | Figma link + flow description |
 | Unknowns gate | Simple blocking questions | 98% confidence threshold across 5 dimensions |

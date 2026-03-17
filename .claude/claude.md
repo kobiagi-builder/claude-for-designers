@@ -23,8 +23,8 @@ This project helps software designers use Claude Code to accelerate their design
 ## Workflow Guidelines
 
 ### When the user shares a Figma link:
-1. **For full implementations with planning**: Use the `.claude/skills/implement-figma-design` skill. This is a multi-phase workflow (trycycle-inspired) with iterative planning, plan-editing, execution, and Playwright-validated review loops. Best for complete pages, complex components, or multi-component flows. Requires both a Figma link and a short flow description.
-2. **For quick single-component implementations**: Use the `.claude/skills/figma-implement-design` skill. This is a streamlined 8-step workflow for individual components or simple designs.
+1. **For full implementations with planning**: Use the `.claude/skills/implement-figma-design-advanced` skill. This is a multi-phase workflow with iterative planning, plan-editing, execution, and Playwright-validated review loops. Best for complete pages, complex components, or multi-component flows. Requires both a Figma link and a short flow description.
+2. **For quick single-component implementations**: Use the `.claude/skills/implement-figma-design-lite` skill. This is a streamlined 8-step workflow for individual components or simple designs.
 3. Follow the chosen skill's workflow for fetching design data, analyzing structure, and generating code.
 4. Use Playwright to preview and validate the result if a dev server is available
 
@@ -58,8 +58,8 @@ This project helps software designers use Claude Code to accelerate their design
 
 ## Common Tasks
 
-- **"Implement this design"** (with flow description): Use the `implement-figma-design` skill for full multi-phase workflow
-- **"Implement this component"** (single component): Use the `figma-implement-design` skill for streamlined implementation
+- **"Implement this design"** (with flow description): Use the `implement-figma-design-advanced` skill for full multi-phase workflow
+- **"Implement this component"** (single component): Use the `implement-figma-design-lite` skill for streamlined implementation
 - **"Extract the design system"**: Pull colors, typography, spacing from Figma and create a token/variable system
 - **"Make this responsive"**: Adapt a fixed design to work across screen sizes
 - **"Compare my implementation"**: Screenshot the current implementation and compare against the Figma design
