@@ -3,29 +3,33 @@
 # Claude for Designers — Installer
 # Usage: curl -sL https://raw.githubusercontent.com/kobiagi-builder/claude-for-designers/main/install.sh | bash
 
-set -e
-
 REPO_URL="https://github.com/kobiagi-builder/claude-for-designers.git"
 FOLDER_NAME="claude-for-designers"
 
 # -------------------------------------------------------------------
-# Load the user's shell profile so installed tools are on PATH.
-# curl | bash runs a non-login, non-interactive shell that skips
-# .zshrc / .bash_profile, making nvm, npm globals, etc. invisible.
+# Expand PATH to include common tool locations that are missing
+# when running via curl | bash (non-interactive shell).
+# We do NOT source .zshrc/.bash_profile — those can fail silently.
 # -------------------------------------------------------------------
-load_shell_profile() {
-  export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
-  [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" 2>/dev/null
 
-  for f in "$HOME/.bash_profile" "$HOME/.bashrc" "$HOME/.zshrc" "$HOME/.profile"; do
-    if [ -f "$f" ]; then
-      . "$f" 2>/dev/null || true
-      break
-    fi
-  done
-}
+# Add common bin directories that hold npm globals, Homebrew, etc.
+for dir in \
+  "$HOME/.nvm/versions/node"/*/bin \
+  "$HOME/.npm-global/bin" \
+  "/usr/local/bin" \
+  "/opt/homebrew/bin" \
+  "$HOME/bin" \
+  "$HOME/.local/bin"; do
+  case ":$PATH:" in
+    *":$dir:"*) ;; # already on PATH
+    *) [ -d "$dir" ] && export PATH="$dir:$PATH" ;;
+  esac
+done
 
-load_shell_profile
+# Now enable strict mode (after PATH setup, so no silent exits)
+set -e
 
 echo ""
 echo "  Claude for Designers — Installer"
@@ -40,7 +44,6 @@ echo ""
 if ! command -v git &> /dev/null; then
   echo "  [..] Git not found — installing..."
   if [[ "$OSTYPE" == "darwin"* ]]; then
-    # macOS: trigger Xcode Command Line Tools (includes git)
     xcode-select --install 2>/dev/null || true
     echo ""
     echo "  A system dialog should appear asking to install Command Line Tools."
@@ -63,14 +66,9 @@ echo "  [ok] Git found"
 if ! command -v node &> /dev/null || [ "$(node -v | sed 's/v//' | cut -d. -f1)" -lt 18 ]; then
   echo "  [..] Node.js v18+ not found — installing via nvm..."
 
-  # Install nvm if not present
-  if [ -z "$NVM_DIR" ] || [ ! -s "$NVM_DIR/nvm.sh" ]; then
-    export NVM_DIR="$HOME/.nvm"
+  if [ ! -s "$NVM_DIR/nvm.sh" ]; then
     curl -sL https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
-    # Load nvm into current shell
-    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
-  else
-    . "$NVM_DIR/nvm.sh"
+    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" 2>/dev/null
   fi
 
   nvm install 20
@@ -81,15 +79,12 @@ else
 fi
 
 # --- Claude Code ---
-# Reload profile in case nvm/npm paths were just set up
-load_shell_profile
-
 if ! command -v claude &> /dev/null; then
   echo "  [..] Claude Code not found — installing..."
   npm install -g @anthropic-ai/claude-code
-  # Add npm global bin to PATH for this session
-  NPM_BIN="$(npm prefix -g)/bin"
-  export PATH="$NPM_BIN:$PATH"
+  # Make the newly installed binary available in this session
+  NPM_GLOBAL_BIN="$(npm prefix -g 2>/dev/null)/bin"
+  export PATH="$NPM_GLOBAL_BIN:$PATH"
   echo "  [ok] Claude Code installed"
 else
   echo "  [ok] Claude Code found"
