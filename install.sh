@@ -86,12 +86,16 @@ else
 fi
 
 # --- Claude Code ---
-# claude may exist under an inactive nvm node version but not the current one.
-# Check the current node's bin specifically, not just any PATH match.
-CURRENT_NODE_BIN="$(dirname "$(which node)" 2>/dev/null)"
-if [ -z "$CURRENT_NODE_BIN" ] || [ ! -x "$CURRENT_NODE_BIN/claude" ]; then
-  echo "  [..] Installing Claude Code for Node $(node -v)..."
-  npm install -g @anthropic-ai/claude-code
+# The user's real terminal may use a different node than what this script's
+# PATH expansion finds (e.g. Homebrew node vs nvm node). We must check
+# whether claude works in the user's actual login shell, not just here.
+USER_SHELL="${SHELL:-/bin/zsh}"
+CLAUDE_IN_LOGIN_SHELL="$($USER_SHELL -lc 'command -v claude' 2>/dev/null)"
+
+if [ -z "$CLAUDE_IN_LOGIN_SHELL" ]; then
+  echo "  [..] Claude Code not found in your terminal — installing..."
+  # Install via the user's login shell so it goes under the node they actually use
+  $USER_SHELL -lc 'npm install -g @anthropic-ai/claude-code' </dev/null
   echo "  [ok] Claude Code installed"
 else
   echo "  [ok] Claude Code found"
