@@ -14,7 +14,7 @@ Turn your Figma designs into production-ready code using Claude Code. This proje
 
 1. **Cursor or VS Code** with the Claude Code extension installed
 2. **Node.js** (v18 or later) — [Download](https://nodejs.org/)
-3. **A Figma account** — you'll be asked for your API key during setup
+3. **A Figma account** — you'll sign in with your Figma account during setup (no API key needed)
 
 ## Getting Started
 
@@ -32,9 +32,9 @@ Replace `my-project` with whatever you want your project folder to be called.
 
 The installer will:
 1. Set up the project in your current folder
-2. Ask for your **Figma API key** (with instructions on where to find it)
-3. Configure both **Figma** and **Playwright** connections automatically
-4. Open the project in Cursor or VS Code automatically
+2. Configure both **Figma** (OAuth) and **Playwright** connections automatically
+3. Open the project in Cursor or VS Code automatically
+4. When you first use Figma, you'll sign in with your Figma account in the browser
 
 ### 2. Open in Cursor or VS Code
 
@@ -54,13 +54,14 @@ git clone https://github.com/kobiagi-builder/claude-for-designers.git
 
 Open the folder in Cursor or VS Code, then type `/prep` in a Claude chat to run the setup wizard.
 
-## How to Get Your Figma API Key
+## Connecting to Figma
 
-1. Open [Figma](https://www.figma.com) and log in
-2. Click your profile icon (top-left) and go to **Settings**
-3. Scroll down to **Personal Access Tokens**
-4. Click **Generate new token**, give it a name, and copy the key
-5. The key starts with `figd_` — keep it somewhere safe until the installer asks for it
+This project uses Figma's official OAuth authentication — no API key or token needed.
+
+1. After setup, open a Claude chat and run `/mcp` to see your MCP servers
+2. Click **Connect** next to the Figma server
+3. Sign in with your Figma account in the browser window that opens
+4. Once connected, you can paste any Figma link and Claude will read your designs
 
 ## Usage
 
@@ -119,7 +120,7 @@ claude-for-designers/
 │       └── webapp-testing/                 # Browser preview and testing
 ├── src/                                    # Your generated code goes here
 ├── install.sh                              # One-command installer
-├── .gitignore                              # Keeps your API key out of git
+├── .gitignore                              # Keeps local config out of git
 └── README.md
 ```
 
@@ -136,8 +137,8 @@ claude-for-designers/
 ### "MCP server not found" or Figma commands fail
 Run `/prep` in a Claude chat to reconfigure, then restart the Claude extension.
 
-### "Invalid Figma API key"
-Your key may have expired. Generate a new one in Figma Settings > Personal Access Tokens, then run `/prep` again.
+### Figma connection fails or "Unauthorized"
+Try disconnecting and reconnecting the Figma server in the MCP panel. You may need to re-authorize in your browser.
 
 ### Playwright isn't working
 Make sure Node.js is installed (`node --version` in Terminal). Playwright is downloaded automatically on first use.
@@ -147,10 +148,10 @@ Close and reopen your IDE so the Claude extension reloads the MCP configuration.
 
 ## Security
 
-- Your Figma API key is stored only in `.mcp.json` at the project root
+- Figma uses OAuth authentication — no API keys or tokens are stored locally
 - `.mcp.json` is in `.gitignore` — it will **never** be committed or pushed to GitHub
-- No keys are stored in environment variables, cloud services, or shared config files
-- Each user has their own independent key
+- Figma authorization is managed through your browser and Figma account
+- Each user authenticates independently with their own Figma account
 
 ## License
 

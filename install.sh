@@ -33,7 +33,7 @@ fi
 echo "  [ok] Git found"
 
 # -------------------------------------------------------------------
-# 2. Check Node.js (needed for MCP servers via npx)
+# 2. Check Node.js (needed for Playwright MCP via npx)
 # -------------------------------------------------------------------
 
 # Expand PATH for non-interactive shell
@@ -50,7 +50,7 @@ done
 
 if ! command -v node &> /dev/null; then
   echo ""
-  echo "  [x] Node.js is required for the Figma and Playwright connections."
+  echo "  [x] Node.js is required for the Playwright browser connection."
   echo "      Install it from https://nodejs.org (v18 or later) and try again."
   exit 1
 fi
@@ -81,49 +81,14 @@ rmdir _tmp_clone 2>/dev/null || true
 echo "  [ok] Repository cloned"
 
 # -------------------------------------------------------------------
-# 4. Ask for Figma API key and write .mcp.json
+# 4. Write .mcp.json with Figma (OAuth) + Playwright
 # -------------------------------------------------------------------
 
-echo ""
-echo "  ================================="
-echo "  Figma Setup"
-echo "  ================================="
-echo ""
-echo "  To connect to Figma, you need a Personal Access Token."
-echo ""
-echo "  How to get one:"
-echo "    1. Open Figma and go to Settings"
-echo "    2. Scroll to 'Personal Access Tokens'"
-echo "    3. Click 'Generate new token' and copy it"
-echo "    4. It starts with figd_"
-echo ""
-
-FIGMA_KEY=""
-while [ -z "$FIGMA_KEY" ]; do
-  read -p "  Paste your Figma API key here: " FIGMA_KEY </dev/tty
-  if [ -z "$FIGMA_KEY" ]; then
-    echo "  Key cannot be empty. Please try again."
-  elif [[ "$FIGMA_KEY" != figd_* ]]; then
-    echo ""
-    echo "  That doesn't look like a Figma key (should start with figd_)."
-    read -p "  Use it anyway? (y/n): " USE_ANYWAY </dev/tty
-    if [ "$USE_ANYWAY" != "y" ] && [ "$USE_ANYWAY" != "Y" ]; then
-      FIGMA_KEY=""
-    fi
-  fi
-done
-
-cat > .mcp.json << MCPEOF
+cat > .mcp.json << 'MCPEOF'
 {
   "mcpServers": {
     "figma": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "figma-developer-mcp",
-        "--figma-api-key=${FIGMA_KEY}",
-        "--stdio"
-      ]
+      "url": "https://mcp.figma.com/mcp"
     },
     "playwright": {
       "command": "npx",
@@ -137,7 +102,7 @@ cat > .mcp.json << MCPEOF
 MCPEOF
 
 echo ""
-echo "  [ok] Figma configured"
+echo "  [ok] Figma configured (OAuth — sign in with your Figma account)"
 echo "  [ok] Playwright configured"
 
 # -------------------------------------------------------------------
@@ -150,6 +115,11 @@ echo ""
 echo "  ================================="
 echo "  Setup complete!"
 echo "  ================================="
+echo ""
+echo "  When your editor opens:"
+echo "    1. Open Claude Code (Cmd+Shift+P > Claude)"
+echo "    2. Figma will ask you to sign in — click 'Connect' and authorize in your browser"
+echo "    3. Once connected, paste any Figma link and Claude will implement it as code"
 echo ""
 
 OPENED=false
@@ -165,12 +135,12 @@ fi
 
 if [ "$OPENED" = true ]; then
   echo ""
-  echo "  Start a Claude chat and paste any Figma link."
+  echo "  Paste any Figma link to get started!"
 else
   echo "  Open this folder in Cursor or VS Code:"
   echo ""
   echo "    $FULL_PATH"
   echo ""
-  echo "  Then start a Claude chat and paste any Figma link."
+  echo "  Then paste any Figma link to get started."
 fi
 echo ""

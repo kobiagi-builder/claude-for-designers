@@ -1,6 +1,6 @@
 ---
 name: prep
-description: Interactive setup wizard that configures Figma and Playwright MCP servers for new users. Asks for Figma API key and writes the project .mcp.json automatically.
+description: Interactive setup wizard that configures Figma and Playwright MCP servers for new users. Uses Figma OAuth (no API key needed) and writes the project .mcp.json automatically.
 ---
 
 # Project Setup Wizard
@@ -25,32 +25,15 @@ ls -la .mcp.json
 
 If it exists, read it and check whether both `figma` and `playwright` servers are configured.
 
-### Step 2: Ask for Figma API Key
+### Step 2: Write the `.mcp.json` File
 
-Use the AskUserQuestion tool to ask the user for their Figma Personal Access Token.
-
-**Important context to tell the user:**
-- They can get their key from: **Figma > Settings > Personal Access Tokens** (or https://www.figma.com/developers/api#access-tokens)
-- The key starts with `figd_`
-- The key will be stored locally in this project only (`.mcp.json` is gitignored and will never be committed)
-
-Ask the question clearly and simply. These are non-technical designers — keep the language friendly.
-
-### Step 3: Write the `.mcp.json` File
-
-Write the following to `.mcp.json` at the project root, inserting the user's Figma API key:
+Write the following to `.mcp.json` at the project root:
 
 ```json
 {
   "mcpServers": {
     "figma": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "figma-developer-mcp",
-        "--figma-api-key=USER_KEY_HERE",
-        "--stdio"
-      ]
+      "url": "https://mcp.figma.com/mcp"
     },
     "playwright": {
       "command": "npx",
@@ -63,19 +46,22 @@ Write the following to `.mcp.json` at the project root, inserting the user's Fig
 }
 ```
 
-Replace `USER_KEY_HERE` with the actual key the user provided.
+This uses the **official Figma Remote MCP Server** with OAuth authentication — no API key or token is needed. The user will sign in with their Figma account when they first connect.
 
-### Step 4: Confirm and Instruct Restart
+If the user already has a `.mcp.json`, merge the config rather than overwriting (preserve any existing servers).
+
+### Step 3: Confirm and Instruct
 
 Tell the user:
 
 1. "Setup complete! Both Figma and Playwright are now configured."
 2. "**Please restart Claude Code** (close and reopen) so the MCP servers load."
-3. "After restarting, you can paste any Figma link and I'll implement it as code."
+3. "When Figma appears in your MCP list, click **Connect** — you'll be asked to sign in with your Figma account in your browser."
+4. "After connecting, paste any Figma link and I'll implement it as code."
 
 ### Important Notes
 
-- `.mcp.json` is listed in `.gitignore` — the user's API key will **never** be committed to git
-- If the user already has a `.mcp.json`, merge the config rather than overwriting (preserve any existing servers)
-- If the key doesn't start with `figd_`, gently ask the user to double-check — it may not be a valid Figma token
-- Do NOT store the key anywhere else (no `.env`, no global config)
+- `.mcp.json` is listed in `.gitignore` — safe to keep in the project
+- No API key or Personal Access Token is needed — Figma uses OAuth (Connected Apps)
+- The user authenticates via their browser when they first connect the Figma MCP
+- If the user has issues connecting, they can try disconnecting and reconnecting the Figma server in the MCP panel
