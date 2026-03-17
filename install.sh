@@ -3,18 +3,22 @@
 # Claude for Designers — Installer
 # Usage: curl -sL https://raw.githubusercontent.com/kobiagi-builder/claude-for-designers/main/install.sh | bash
 
+# IMPORTANT: This script is read from stdin via curl | bash.
+# Never source external files without redirecting stdin from /dev/null,
+# or the sourced file will consume the rest of this script.
+
+set -e
+
 REPO_URL="https://github.com/kobiagi-builder/claude-for-designers.git"
 FOLDER_NAME="claude-for-designers"
 
 # -------------------------------------------------------------------
-# Expand PATH to include common tool locations that are missing
-# when running via curl | bash (non-interactive shell).
-# We do NOT source .zshrc/.bash_profile — those can fail silently.
+# Expand PATH to include common tool locations.
+# curl | bash skips .zshrc/.bash_profile, so tools like node, npm,
+# and claude are invisible. We add known directories directly.
 # -------------------------------------------------------------------
 export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
-[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" 2>/dev/null
 
-# Add common bin directories that hold npm globals, Homebrew, etc.
 for dir in \
   "$HOME/.nvm/versions/node"/*/bin \
   "$HOME/.npm-global/bin" \
@@ -23,13 +27,10 @@ for dir in \
   "$HOME/bin" \
   "$HOME/.local/bin"; do
   case ":$PATH:" in
-    *":$dir:"*) ;; # already on PATH
+    *":$dir:"*) ;;
     *) [ -d "$dir" ] && export PATH="$dir:$PATH" ;;
   esac
 done
-
-# Now enable strict mode (after PATH setup, so no silent exits)
-set -e
 
 echo ""
 echo "  Claude for Designers — Installer"
@@ -67,12 +68,20 @@ if ! command -v node &> /dev/null || [ "$(node -v | sed 's/v//' | cut -d. -f1)" 
   echo "  [..] Node.js v18+ not found — installing via nvm..."
 
   if [ ! -s "$NVM_DIR/nvm.sh" ]; then
-    curl -sL https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
-    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" 2>/dev/null
+    curl -sL https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | BASH_ENV=/dev/null bash
   fi
+
+  # Source nvm with stdin from /dev/null so it doesn't consume our script
+  . "$NVM_DIR/nvm.sh" < /dev/null 2>/dev/null
 
   nvm install 20
   nvm use 20
+
+  # Add the newly installed node to PATH
+  for dir in "$HOME/.nvm/versions/node"/*/bin; do
+    [ -d "$dir" ] && export PATH="$dir:$PATH"
+  done
+
   echo "  [ok] Node.js $(node -v) installed via nvm"
 else
   echo "  [ok] Node.js $(node -v) found"
@@ -82,7 +91,7 @@ fi
 if ! command -v claude &> /dev/null; then
   echo "  [..] Claude Code not found — installing..."
   npm install -g @anthropic-ai/claude-code
-  # Make the newly installed binary available in this session
+  # Add npm global bin to PATH for this session
   NPM_GLOBAL_BIN="$(npm prefix -g 2>/dev/null)/bin"
   export PATH="$NPM_GLOBAL_BIN:$PATH"
   echo "  [ok] Claude Code installed"
@@ -97,7 +106,7 @@ fi
 if [ -d "$FOLDER_NAME" ]; then
   echo ""
   echo "  Folder '$FOLDER_NAME' already exists in this directory."
-  read -p "  Overwrite it? (y/n): " OVERWRITE
+  read -p "  Overwrite it? (y/n): " OVERWRITE </dev/tty
   if [ "$OVERWRITE" = "y" ] || [ "$OVERWRITE" = "Y" ]; then
     rm -rf "$FOLDER_NAME"
   else
