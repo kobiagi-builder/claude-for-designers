@@ -155,11 +155,11 @@ echo ""
 OPENED=false
 if command -v cursor &> /dev/null; then
   echo "  Opening in Cursor..."
-  cursor "$FULL_PATH"
+  cursor "$FULL_PATH" </dev/null
   OPENED=true
 elif command -v code &> /dev/null; then
   echo "  Opening in VS Code..."
-  code "$FULL_PATH"
+  code "$FULL_PATH" </dev/null
   OPENED=true
 fi
 
