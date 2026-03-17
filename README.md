@@ -20,16 +20,21 @@ Turn your Figma designs into production-ready code using Claude Code. This proje
 
 ### 1. Run the installer
 
-Open Terminal, navigate to the folder where you want the project, and paste:
+Open Terminal and run these three commands:
 
 ```bash
+mkdir my-project
+cd my-project
 curl -sL https://raw.githubusercontent.com/kobiagi-builder/claude-for-designers/main/install.sh | bash
 ```
 
+Replace `my-project` with whatever you want your project folder to be called.
+
 The installer will:
-1. Clone the repository
+1. Set up the project in your current folder
 2. Ask for your **Figma API key** (with instructions on where to find it)
 3. Configure both **Figma** and **Playwright** connections automatically
+4. Open the project in Cursor or VS Code automatically
 
 ### 2. Open in Cursor or VS Code
 

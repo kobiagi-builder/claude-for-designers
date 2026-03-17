@@ -2,11 +2,13 @@
 
 # Claude for Designers — Installer
 # Usage: curl -sL https://raw.githubusercontent.com/kobiagi-builder/claude-for-designers/main/install.sh | bash
+#
+# Clones the repo into the CURRENT directory and configures MCP servers.
+# Run this from an empty folder where you want your project to live.
 
 set -e
 
 REPO_URL="https://github.com/kobiagi-builder/claude-for-designers.git"
-FOLDER_NAME="claude-for-designers"
 
 echo ""
 echo "  Claude for Designers — Installer"
@@ -55,16 +57,15 @@ fi
 echo "  [ok] Node.js $(node -v) found"
 
 # -------------------------------------------------------------------
-# 3. Clone the repo
+# 3. Clone the repo into the current directory
 # -------------------------------------------------------------------
 
-if [ -d "$FOLDER_NAME" ]; then
+# Check if current directory is empty (besides hidden files like .DS_Store)
+if [ -n "$(ls -A 2>/dev/null | grep -v '.DS_Store')" ]; then
   echo ""
-  echo "  Folder '$FOLDER_NAME' already exists here."
-  read -p "  Overwrite it? (y/n): " OVERWRITE </dev/tty
-  if [ "$OVERWRITE" = "y" ] || [ "$OVERWRITE" = "Y" ]; then
-    rm -rf "$FOLDER_NAME"
-  else
+  echo "  This folder is not empty."
+  read -p "  Continue anyway? Files may be overwritten. (y/n): " CONTINUE </dev/tty
+  if [ "$CONTINUE" != "y" ] && [ "$CONTINUE" != "Y" ]; then
     echo "  Cancelled."
     exit 1
   fi
@@ -72,7 +73,11 @@ fi
 
 echo ""
 echo "  Cloning repository..."
-git clone --quiet "$REPO_URL" "$FOLDER_NAME"
+git clone --quiet "$REPO_URL" _tmp_clone
+# Move contents (including hidden files) into current directory, then clean up
+shopt -s dotglob 2>/dev/null || true
+mv _tmp_clone/* _tmp_clone/.* . 2>/dev/null || true
+rmdir _tmp_clone 2>/dev/null || true
 echo "  [ok] Repository cloned"
 
 # -------------------------------------------------------------------
@@ -108,7 +113,7 @@ while [ -z "$FIGMA_KEY" ]; do
   fi
 done
 
-cat > "$FOLDER_NAME/.mcp.json" << MCPEOF
+cat > .mcp.json << MCPEOF
 {
   "mcpServers": {
     "figma": {
@@ -139,7 +144,7 @@ echo "  [ok] Playwright configured"
 # 5. Open in Cursor or VS Code automatically
 # -------------------------------------------------------------------
 
-FULL_PATH="$(cd "$FOLDER_NAME" && pwd)"
+FULL_PATH="$(pwd)"
 
 echo ""
 echo "  ================================="
