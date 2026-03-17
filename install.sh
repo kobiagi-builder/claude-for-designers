@@ -14,39 +14,61 @@ echo "  ================================="
 echo ""
 
 # -------------------------------------------------------------------
-# 1. Check prerequisites
+# 1. Install missing prerequisites automatically
 # -------------------------------------------------------------------
 
-# Check git
+# --- Git ---
 if ! command -v git &> /dev/null; then
-  echo "  [x] Git is not installed."
-  echo "      Install it from https://git-scm.com/downloads and try again."
-  exit 1
+  echo "  [..] Git not found — installing..."
+  if [[ "$OSTYPE" == "darwin"* ]]; then
+    # macOS: trigger Xcode Command Line Tools (includes git)
+    xcode-select --install 2>/dev/null || true
+    echo ""
+    echo "  A system dialog should appear asking to install Command Line Tools."
+    echo "  Click 'Install' and wait for it to finish, then run this command again."
+    echo ""
+    exit 0
+  elif command -v apt-get &> /dev/null; then
+    sudo apt-get update -qq && sudo apt-get install -y -qq git
+  elif command -v yum &> /dev/null; then
+    sudo yum install -y -q git
+  else
+    echo "  [x] Could not install Git automatically."
+    echo "      Install it from https://git-scm.com/downloads and try again."
+    exit 1
+  fi
 fi
 echo "  [ok] Git found"
 
-# Check Node.js
-if ! command -v node &> /dev/null; then
-  echo "  [x] Node.js is not installed."
-  echo "      Install it from https://nodejs.org (v18 or later) and try again."
-  exit 1
+# --- Node.js ---
+if ! command -v node &> /dev/null || [ "$(node -v | sed 's/v//' | cut -d. -f1)" -lt 18 ]; then
+  echo "  [..] Node.js v18+ not found — installing via nvm..."
+
+  # Install nvm if not present
+  if [ -z "$NVM_DIR" ] || [ ! -s "$NVM_DIR/nvm.sh" ]; then
+    export NVM_DIR="$HOME/.nvm"
+    curl -sL https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+    # Load nvm into current shell
+    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+  else
+    . "$NVM_DIR/nvm.sh"
+  fi
+
+  nvm install 20
+  nvm use 20
+  echo "  [ok] Node.js $(node -v) installed via nvm"
+else
+  echo "  [ok] Node.js $(node -v) found"
 fi
 
-NODE_VERSION=$(node -v | sed 's/v//' | cut -d. -f1)
-if [ "$NODE_VERSION" -lt 18 ]; then
-  echo "  [x] Node.js v18+ is required (you have v$(node -v))."
-  echo "      Update at https://nodejs.org and try again."
-  exit 1
-fi
-echo "  [ok] Node.js $(node -v) found"
-
-# Check Claude Code
+# --- Claude Code ---
 if ! command -v claude &> /dev/null; then
-  echo "  [x] Claude Code is not installed."
-  echo "      Install it from https://docs.anthropic.com/en/docs/claude-code/overview"
-  exit 1
+  echo "  [..] Claude Code not found — installing..."
+  npm install -g @anthropic-ai/claude-code
+  echo "  [ok] Claude Code installed"
+else
+  echo "  [ok] Claude Code found"
 fi
-echo "  [ok] Claude Code found"
 
 # -------------------------------------------------------------------
 # 2. Clone the repo
@@ -75,7 +97,7 @@ echo "  [ok] Repository cloned to ./$FOLDER_NAME"
 
 echo ""
 echo "  ================================="
-echo "  Installation complete!"
+echo "  Almost done!"
 echo "  ================================="
 echo ""
 echo "  Claude Code is opening now."

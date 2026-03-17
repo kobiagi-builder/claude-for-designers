@@ -12,11 +12,12 @@ Turn your Figma designs into production-ready code using Claude Code. This proje
 
 ## Prerequisites
 
-Before you start, make sure you have:
+All you need before running the installer:
 
-1. **Claude Code** installed — [Get it here](https://docs.anthropic.com/en/docs/claude-code/overview)
-2. **Node.js** (v18 or later) — [Download](https://nodejs.org/)
-3. **A Figma account** with a Personal Access Token — you'll be asked for this during setup
+1. **A Mac or Linux computer** with Terminal access
+2. **A Figma account** — you'll be asked for your API key during setup (the installer walks you through it)
+
+The installer automatically installs Git, Node.js, and Claude Code if they're missing.
 
 ## Getting Started
 
