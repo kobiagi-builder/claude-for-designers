@@ -56,6 +56,30 @@ playwright_resize(width=375, height=812)
 playwright_screenshot()
 ```
 
+## Mock Data & Interactivity Review
+
+The implementation must be **demo-ready**. Verify:
+
+- [ ] **Mock data file exists** (`src/data/mockData.ts` or equivalent) with typed exports
+- [ ] **No placeholder text**: No "lorem ipsum", "Item 1", repeated "John Doe", or "TODO" content
+- [ ] **Realistic data variety**: Lists have 5-15 items with diverse, domain-appropriate content
+- [ ] **Plausible numbers**: Metrics, prices, percentages look realistic ($12,450 not $99999)
+- [ ] **Relative dates**: Timestamps make sense relative to today
+- [ ] **Interactive elements work**: Use Playwright to click buttons, tabs, toggles, dropdowns — verify each produces visible feedback
+- [ ] **No dead clicks**: Every element that looks clickable must respond to clicks
+- [ ] **State management**: Active tab, selected item, open modal states update visually
+
+Test interactivity with Playwright:
+```
+playwright_click(selector="[tab or button]")
+playwright_screenshot()
+// Verify the UI state changed
+
+playwright_click(selector="[toggle or dropdown]")
+playwright_screenshot()
+// Verify visual feedback
+```
+
 ## Code Quality Review
 
 Also review for:
@@ -66,6 +90,7 @@ Also review for:
 - Unused or duplicate components (should reuse existing ones)
 - Semantic HTML usage
 - Missing interactive states
+- Mock data imported from dedicated file (not hardcoded inline in JSX)
 
 ## Output Format
 

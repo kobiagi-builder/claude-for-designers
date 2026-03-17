@@ -36,6 +36,24 @@ Critical implementation rules:
 - **Accessibility**: Follow WCAG standards (alt text, ARIA labels, keyboard navigation, focus indicators).
 - When project conventions conflict with Figma specs, **the Figma design wins**.
 
+**Demo-ready mock data & interactivity rules (MANDATORY):**
+- **Create `src/data/mockData.ts`** with typed, exported mock data for all dynamic content in the design.
+- **Realistic content only** — no lorem ipsum, no "Item 1", no "John Doe" repeated. Use diverse, domain-appropriate names, numbers, dates, and descriptions.
+- **Plausible numbers** — format correctly ($12,450 not $99999, 23.5% not 100%, 1,247 users not 1).
+- **Relative dates** — use dates relative to today (e.g., "2 hours ago", "Yesterday", "Mar 14, 2026"). Import and use a date utility or compute from `new Date()`.
+- **Data variety** — lists/tables should have 5-15 items with mixed statuses, varied lengths, and different states to look visually authentic.
+- **All interactive elements must work**:
+  - Buttons: `onClick` with visible feedback (state change, console log, or toast)
+  - Tabs/nav: switch active view with React `useState`
+  - Dropdowns/selects: open with real options, update state on selection
+  - Modals/dialogs: open on trigger click, close on dismiss/overlay click
+  - Toggles/checkboxes: toggle state visually on click
+  - Search/filter: filter mock data list in real-time
+  - Expandable sections: expand/collapse content
+  - Forms: accept input values with controlled components
+- **No dead clicks** — every element that looks clickable must do something visible when clicked.
+- **Import mock data** into components — never hardcode data inline in JSX.
+
 {{#if POST_IMPLEMENTATION_REVIEW_FINDINGS}}
 Fix the implementation against the attached review findings. Address all critical and major issues. For each fix:
 1. Make the code change

@@ -47,6 +47,17 @@ Repeat until all tasks are done.
 - Do not add external icon packages
 - SVG for icons, appropriate formats for images
 
+**Mock data & interactivity (MANDATORY for demo-ready output):**
+- Create `src/data/mockData.ts` as the first implementation task — all dynamic content lives here
+- Export typed data with TypeScript interfaces
+- Use realistic, diverse content: real-sounding names, plausible business numbers, relative dates
+- Never use lorem ipsum, "Item 1/2/3", or repeated placeholder names
+- Lists and tables need 5-15 items with varied statuses and content lengths
+- All buttons, tabs, toggles, dropdowns, modals must have working click handlers
+- Use React `useState` for all interactive state (active tab, open modal, toggle values, selected items)
+- Search/filter inputs should filter the mock data list in real-time
+- No element that looks clickable should be a dead click — every interactive element must produce visible feedback
+
 ### Blocker Definition
 
 Two states exist: **execute** or **stop for a blocker**.

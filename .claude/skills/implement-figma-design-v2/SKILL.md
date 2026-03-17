@@ -144,7 +144,38 @@ Identify all interactive elements and their states:
 - Lists & repetition patterns
 - Edge cases: long text truncation, missing images, empty states
 
-Save the complete design analysis to a temp file for use by subagents.
+### 3.5 Mock Data & Interactivity Plan
+
+The implementation must be **demo-ready** — looking, feeling, and behaving like a real product with realistic content and working interactions.
+
+**Content inventory** — for every piece of content in the design, classify and plan:
+
+| Content Type | Examples | Mock Data Approach |
+|---|---|---|
+| **User profiles** | Names, avatars, roles, emails | Realistic diverse names, placeholder avatar images, real-looking emails |
+| **Metrics & numbers** | Revenue, counts, percentages, KPIs | Plausible business numbers with proper formatting ($12,450, 23.5%, 1,247) |
+| **Dates & timestamps** | Created dates, deadlines, last active | Relative to current date (today, yesterday, "3 days ago", "Mar 14, 2026") |
+| **Text content** | Descriptions, comments, messages | Domain-appropriate realistic copy, not lorem ipsum |
+| **Lists & tables** | Data rows, card grids, feeds | 5-15 items with varied but realistic data, not repetitive |
+| **Status indicators** | Badges, progress bars, tags | Mix of different states (active, pending, completed, overdue) |
+| **Navigation items** | Menu items, tabs, breadcrumbs | Real labels matching the design's domain |
+| **Media** | Images, thumbnails, charts | Placeholder image services or SVG placeholders with realistic dimensions |
+
+**Interactivity inventory** — for every interactive element, plan the demo behavior:
+
+| Element | Demo Behavior |
+|---|---|
+| **Buttons** | Click handlers with visual feedback (loading state, success toast, or state change) |
+| **Navigation/tabs** | Switch between views, highlight active state |
+| **Forms & inputs** | Accept input, show validation feedback |
+| **Dropdowns/selects** | Open with options, allow selection |
+| **Modals/dialogs** | Open on trigger, close on dismiss |
+| **Toggle/switch** | Toggle state on click |
+| **Expandable sections** | Expand/collapse with animation |
+| **Search/filter** | Filter displayed mock data in real-time |
+| **Hover states** | Show tooltips, card elevations, color changes |
+
+Save the complete design analysis (including mock data and interactivity plan) to a temp file for use by subagents.
 
 ---
 
@@ -265,7 +296,11 @@ Spawn a fresh implementation subagent. Immediately before dispatch, prepare the 
 
 The implementation subagent executes all tasks from the plan continuously without pausing, using TDD where the test plan specifies: establish the red state first, implement to green.
 
-**Critical requirement**: The implementation MUST look exactly like the Figma mockup. Components, colors, spacing, typography, behavior — everything must be identical. This is non-negotiable.
+**Critical requirements**:
+- The implementation MUST look exactly like the Figma mockup. Components, colors, spacing, typography, behavior — everything must be identical. This is non-negotiable.
+- The implementation MUST include a **mock data file** (`src/data/mockData.ts`) with realistic, domain-appropriate data for all dynamic content. No lorem ipsum, no "Item 1, Item 2", no placeholder text.
+- The implementation MUST be **interactive and demo-ready** — buttons respond to clicks, tabs switch views, modals open/close, forms accept input, and lists can be filtered/sorted where applicable.
+- All interactive state (selected tab, open modal, toggle values) must be managed with React state hooks.
 
 Do not proceed to review until the implementation subagent has returned a report.
 
@@ -302,7 +337,20 @@ Place the Figma screenshot (from Phase 2) and the implementation screenshot side
 - [ ] **Component Structure**: All components present, correctly nested?
 - [ ] **Interactive States**: Use Playwright to hover/click and verify states match design
 
-### 10.3 Code Quality Review
+### 10.3 Mock Data & Interactivity Review
+
+Verify the implementation is demo-ready:
+
+- [ ] **Mock data file exists** (`src/data/mockData.ts` or equivalent) with typed exports
+- [ ] **No placeholder text**: No "lorem ipsum", "Item 1", "John Doe" repeated, or "TODO" content
+- [ ] **Realistic data variety**: Lists have 5-15 items with diverse, domain-appropriate content
+- [ ] **Numbers are plausible**: Metrics, counts, and percentages look realistic for the domain
+- [ ] **Dates are relative**: Timestamps make sense relative to today's date
+- [ ] **Interactive elements work**: Buttons, tabs, toggles, dropdowns respond to user interaction
+- [ ] **State management**: UI state changes are reflected visually (active tab, selected item, open modal)
+- [ ] **No dead clicks**: Every clickable element does something visible
+
+### 10.4 Code Quality Review
 
 Also review for:
 - Mismatches between implementation and plan
@@ -313,7 +361,7 @@ Also review for:
 - Component reuse (using existing components vs. creating duplicates)
 - Design token usage vs. hardcoded values
 
-### 10.4 Output Format
+### 10.5 Output Format
 
 Numbered list of issues, each with severity: **critical**, **major**, **minor**, or **nit**.
 
@@ -326,7 +374,7 @@ Include the specific Figma value vs. implementation value for every visual discr
 
 If no issues: respond "No issues found."
 
-### 10.5 Fix Loop
+### 10.6 Fix Loop
 
 When critical or major issues are found:
 1. Capture the reviewer's findings as `{POST_IMPLEMENTATION_REVIEW_FINDINGS}`.
@@ -341,7 +389,7 @@ If critical/major issues remain after 8 rounds:
 2. Dispatch a subagent to review past sessions and hypothesize why the loop is not converging.
 3. Present that report and the latest review output to the user and await instructions.
 
-### 10.6 Final Validation
+### 10.7 Final Validation
 
 Once no critical/major issues remain, perform a final comprehensive check with Playwright:
 

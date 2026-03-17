@@ -28,7 +28,9 @@ Task:
   - Responsive behavior matching Figma constraints
   - Accessibility requirements (WCAG)
   - Playwright validation steps for each major component/section
-- The plan should land the requested end state directly — a pixel-perfect implementation of the Figma design.
+  - **Mock data file** (`src/data/mockData.ts`) with realistic, domain-appropriate content for all dynamic elements
+  - **Interactivity** — every clickable element must have a working handler for demo purposes
+- The plan should land the requested end state directly — a pixel-perfect, **demo-ready** implementation of the Figma design. The result must be clickable, interactive, and populated with realistic data — not a static screenshot.
 - Prefer what is idiomatic for existing project technologies, architecturally clean, and robust.
 - Ensure your decisions are thoughtful and justified, and that the justification is included in the plan.
 
@@ -37,12 +39,21 @@ Plan structure:
 2. **Component map**: Every component to create/modify, with file paths
 3. **Design token mapping**: Figma values → project tokens (with exact values where tokens don't exist)
 4. **Asset list**: Images and icons to download from Figma MCP
-5. **Task breakdown**: Bite-sized tasks (2-5 minutes each), each with:
+5. **Mock data spec**: A `src/data/mockData.ts` file plan containing:
+   - Typed interfaces for all data structures
+   - 5-15 realistic items per list/table (diverse names, plausible numbers, relative dates)
+   - Domain-appropriate content (no lorem ipsum, no "Item 1/Item 2")
+   - Mixed statuses/states across items for visual variety
+6. **Interactivity spec**: For each interactive element:
+   - What React state hook manages it
+   - What happens on click/hover/change
+   - Any transitions or animations
+7. **Task breakdown**: Bite-sized tasks (2-5 minutes each), each with:
    - What to implement
    - Exact Figma values to use (colors, spacing, typography)
    - Which existing components to reuse
    - Verification step (what to check after completing)
-6. **Playwright validation plan**: Screenshots to take, viewports to test, states to verify
+8. **Playwright validation plan**: Screenshots to take, viewports to test, states to verify
 
 Critical rules:
 - Every color, spacing, typography, shadow, and border-radius value must come from the Figma design data — never approximate.
