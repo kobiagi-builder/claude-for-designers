@@ -31,8 +31,10 @@ Critical implementation rules:
 - **Design tokens**: Use project design tokens where they match Figma values. Override with exact Figma values where they don't.
 - **Component reuse**: Check for existing components before creating new ones. Only create new components when nothing existing fits.
 - **Asset handling**: Use localhost URLs from Figma MCP directly. Do NOT add external icon packages.
+- **Tech stack**: Use Next.js (App Router) + Tailwind CSS + shadcn/ui + TypeScript. If the project isn't set up yet, initialize with `npx create-next-app` and `npx shadcn@latest init` as the first tasks.
 - **Semantic HTML**: Use appropriate elements (`nav`, `main`, `section`, `article`).
 - **TypeScript**: Add proper types for all component props.
+- **shadcn/ui first**: Use shadcn/ui components (Button, Card, Dialog, Input, Select, Table, etc.) before creating custom ones.
 - **Accessibility**: Follow WCAG standards (alt text, ARIA labels, keyboard navigation, focus indicators).
 - When project conventions conflict with Figma specs, **the Figma design wins**.
 

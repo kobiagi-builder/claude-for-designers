@@ -31,11 +31,17 @@ Task:
   - **Mock data file** (`src/data/mockData.ts`) with realistic, domain-appropriate content for all dynamic elements
   - **Interactivity** — every clickable element must have a working handler for demo purposes
 - The plan should land the requested end state directly — a pixel-perfect, **demo-ready** implementation of the Figma design. The result must be clickable, interactive, and populated with realistic data — not a static screenshot.
-- Prefer what is idiomatic for existing project technologies, architecturally clean, and robust.
+- Use the following tech stack (do NOT ask the user which framework/styling to use):
+  - **Framework**: Next.js (App Router)
+  - **Styling**: Tailwind CSS
+  - **Component Library**: shadcn/ui (use existing components before creating custom ones)
+  - **Language**: TypeScript
+- If the project doesn't have Next.js/Tailwind/shadcn set up yet, include setup tasks as the first items in the plan.
+- Prefer what is idiomatic for Next.js + Tailwind + shadcn/ui, architecturally clean, and robust.
 - Ensure your decisions are thoughtful and justified, and that the justification is included in the plan.
 
 Plan structure:
-1. **Header**: Goal, target Figma node, architecture approach, tech stack
+1. **Header**: Goal, target Figma node, architecture approach (Next.js App Router + Tailwind CSS + shadcn/ui)
 2. **Component map**: Every component to create/modify, with file paths
 3. **Design token mapping**: Figma values → project tokens (with exact values where tokens don't exist)
 4. **Asset list**: Images and icons to download from Figma MCP

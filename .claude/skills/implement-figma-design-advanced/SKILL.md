@@ -18,6 +18,17 @@ This skill requires two inputs from the user:
 
 **If either input is missing, ask the user to provide it before proceeding.** Do not guess or assume. Both are mandatory.
 
+## Tech Stack (Default)
+
+All implementations use the following stack unless the user explicitly specifies otherwise:
+
+- **Framework**: Next.js (App Router)
+- **Styling**: Tailwind CSS
+- **Component Library**: shadcn/ui
+- **Language**: TypeScript
+
+If the project doesn't have these set up yet, the implementation subagent must initialize them as the first task (e.g., `npx create-next-app`, `npx shadcn@latest init`).
+
 ## Prerequisites
 
 - Figma MCP server must be connected and accessible
@@ -283,6 +294,45 @@ When the subagent returns:
 2. If the report includes `## Strategy changes requiring user approval`, present that section to the user verbatim.
 3. If the user requests changes, redispatch and repeat until approved.
 4. Do not proceed until the test plan is accepted.
+
+---
+
+## Phase 8.5: Present Plan for User Approval (Plan Mode)
+
+Before executing, enter **Plan Mode** and present the finalized implementation plan and test plan to the user as a structured To-Do checklist.
+
+1. Use `EnterPlanMode` to switch to plan mode.
+2. Present the plan as a numbered checklist with clear task groupings:
+
+```
+## Implementation Plan
+
+### Setup
+- [ ] Initialize Next.js project with Tailwind CSS and shadcn/ui
+- [ ] Configure design tokens from Figma analysis
+
+### Components
+- [ ] Create [ComponentA] — [description]
+- [ ] Create [ComponentB] — [description]
+...
+
+### Mock Data & Interactivity
+- [ ] Create src/data/mockData.ts with realistic data
+- [ ] Wire up interactive handlers (tabs, buttons, modals, etc.)
+
+### Testing
+- [ ] Playwright screenshot at 1440px viewport
+- [ ] Playwright screenshot at 768px viewport
+- [ ] Playwright screenshot at 375px viewport
+- [ ] Verify hover/active states
+- [ ] Verify interactivity (clicks, toggles, navigation)
+```
+
+3. Ask the user: **"Does this plan look good? I'll start building once you approve."**
+4. Wait for explicit user approval. If the user requests changes, update the plan accordingly.
+5. Once approved, use `ExitPlanMode` and proceed to Phase 9.
+
+**Do not proceed to execution without user approval of the plan.**
 
 ---
 

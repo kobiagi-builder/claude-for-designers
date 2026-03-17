@@ -28,13 +28,21 @@ This project helps software designers use Claude Code to accelerate their design
 3. Follow the chosen skill's workflow for fetching design data, analyzing structure, and generating code.
 4. Use Playwright to preview and validate the result if a dev server is available
 
+### Default Tech Stack
+- **Framework**: Next.js (App Router)
+- **Styling**: Tailwind CSS
+- **Component Library**: shadcn/ui
+- **Language**: TypeScript
+
+Do not ask the user which framework or styling approach to use — always default to the above unless they explicitly specify otherwise.
+
 ### Code Generation Principles
 - **Pixel-perfect fidelity**: Match the Figma design as closely as possible - spacing, colors, typography, border radius, shadows
 - **Semantic HTML**: Use appropriate HTML elements (`nav`, `main`, `section`, `article`, etc.)
 - **Responsive by default**: Implement responsive layouts unless the design is explicitly fixed-width
-- **CSS approach**: Prefer modern CSS (flexbox, grid, custom properties) unless the user specifies a framework like Tailwind
+- **Tailwind CSS**: Use Tailwind utility classes for all styling. Use shadcn/ui components where they fit.
 - **Component structure**: Break designs into logical, reusable components
-- **Design tokens**: Extract repeated values (colors, spacing, font sizes) into variables or tokens
+- **Design tokens**: Extract repeated values (colors, spacing, font sizes) into Tailwind config or CSS variables
 
 ### Design Interpretation
 - When Figma data includes Auto Layout, translate it to flexbox or grid

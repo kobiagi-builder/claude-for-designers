@@ -25,7 +25,7 @@ Every plan starts with:
 - **Goal**: What the implementation achieves (reference Figma node)
 - **Figma source**: File key, node ID, screenshot reference
 - **Architecture**: Component structure and nesting
-- **Tech stack**: Framework, styling approach, component library
+- **Tech stack**: Next.js (App Router) + Tailwind CSS + shadcn/ui + TypeScript (default — do not ask user)
 
 #### Component Map
 
