@@ -85,30 +85,77 @@ Keep the Figma design data loaded — you'll need the exact values (colors, spac
 
 Place the Figma screenshot and the UI screenshot side by side (visually, in your analysis) and examine every region of the design systematically. Work through the screenshots section by section — top to bottom, left to right — so nothing is missed.
 
-### What to compare
+### Fidelity Checklist
 
-Check **every** visual property. The goal is completeness — even a 1px difference counts.
+Run through every item on this checklist. Each category must be verified against the Figma design data. Never approximate or round values — use the precise measurements from the Figma node data.
 
-| Category | What to look for |
-|---|---|
-| **Layout & spacing** | Padding, margins, gaps between elements, overall dimensions, element positioning |
-| **Colors** | Background colors, text colors, border colors, icon colors, gradient values, opacity |
-| **Typography** | Font family, font size, font weight, line height, letter spacing, text alignment, text color |
-| **Borders & radius** | Border width, border color, border style, corner radius (all four corners) |
-| **Shadows & effects** | Box shadows (offset, blur, spread, color), backdrop blur, overlays |
-| **Sizing** | Element widths, heights, aspect ratios, icon sizes |
-| **Alignment** | Horizontal/vertical centering, text alignment, element alignment within containers |
-| **Content** | Missing elements, extra elements, different text content, different icons |
-| **States** | Default states matching (hover/active states are secondary) |
-| **Images & icons** | Correct assets, correct sizing, correct positioning |
+#### 1. Spacing
+- [ ] Padding values match Figma within 1px
+- [ ] Margin values match Figma within 1px
+- [ ] Gap values between elements match exactly
+- [ ] Values mapped to closest design token in the spacing scale
+
+#### 2. Colors
+- [ ] Background colors match exact Figma hex/rgba values
+- [ ] Text colors match exact Figma values
+- [ ] Border colors match exact Figma values
+- [ ] Icon colors match exact Figma values
+- [ ] Gradient values (direction, stops, colors) match exactly
+- [ ] Opacity values preserved exactly as specified
+- [ ] Colors mapped to existing design tokens where they match — flagged if no token exists
+
+#### 3. Typography
+- [ ] Font family matches Figma
+- [ ] Font size matches exactly (no rounding)
+- [ ] Font weight matches exactly
+- [ ] Line height matches exactly
+- [ ] Letter spacing matches exactly
+- [ ] Text alignment matches (left/center/right/justify)
+- [ ] Text color matches (covered in Colors, but verify per text element)
+- [ ] Values mapped to typography tokens where they exist
+
+#### 4. Layout
+- [ ] Figma Auto Layout properties translated correctly to flexbox/grid
+- [ ] Main axis alignment matches (justify-content equivalent)
+- [ ] Cross axis alignment matches (align-items equivalent)
+- [ ] Fixed vs. hug vs. fill sizing behavior preserved from Figma
+- [ ] Element order matches design
+- [ ] Wrapping behavior matches
+
+#### 5. Visual Properties
+- [ ] Border radius matches exact Figma values (all four corners)
+- [ ] Box shadows match exactly (x-offset, y-offset, blur, spread, color)
+- [ ] Backdrop blur / overlay effects match
+- [ ] Stroke/border width and style match
+- [ ] Layer order and z-index relationships preserved
+
+#### 6. Content & Assets
+- [ ] All elements present — nothing missing from the design
+- [ ] No extra elements that aren't in the design
+- [ ] Text content matches
+- [ ] Icons are correct assets, correct size, correct position
+- [ ] Images are correct assets, correct size, correct aspect ratio
+
+#### 7. Sizing & Dimensions
+- [ ] Element widths match Figma
+- [ ] Element heights match Figma
+- [ ] Aspect ratios preserved
+- [ ] Min/max constraints match if specified in design
+
+#### 8. States
+- [ ] Default state matches the design
+- [ ] Hover states match (if specified in Figma)
+- [ ] Active/pressed states match (if specified)
+- [ ] Focus states match (if specified)
+- [ ] Disabled states match (if specified)
 
 ### Document the differences
 
-Create a structured differences report. Every difference gets an entry, no matter how small.
+Create a structured differences report. Every difference gets an entry, no matter how small. Reference which checklist item failed.
 
 **Format each difference as:**
 ```
-[PRIORITY] Category — Description
+[PRIORITY] Checklist Item — Description
 - Element: [which element]
 - Figma value: [exact value from design data]
 - Current value: [what the implementation has]
@@ -122,9 +169,9 @@ Create a structured differences report. Every difference gets an entry, no matte
 
 ### Zero differences = done
 
-If after thorough comparison there are genuinely zero differences — the implementation is pixel-perfect — report this to the user and exit. Don't invent differences that aren't there.
+If after running through the entire checklist there are genuinely zero differences — every item passes — report this to the user and exit. Don't invent differences that aren't there.
 
-> "Comparison complete — 0 differences found. The implementation matches the Figma design."
+> "Comparison complete — all checklist items pass. 0 differences found. The implementation matches the Figma design."
 
 ---
 
