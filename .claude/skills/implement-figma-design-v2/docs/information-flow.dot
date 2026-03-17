@@ -1,0 +1,226 @@
+digraph implement_figma_design_flow {
+  graph [
+    label="implement-figma-design Runtime Information Flow",
+    labelloc=t,
+    labeljust=l,
+    rankdir=LR,
+    splines=polyline,
+    pad=0.3,
+    nodesep=0.5,
+    ranksep=0.9,
+    bgcolor="white",
+    fontname="Helvetica",
+    fontsize=20
+  ];
+
+  node [
+    shape=box,
+    style="rounded,filled",
+    fontname="Helvetica",
+    fontsize=11,
+    color="#475569",
+    fillcolor="white",
+    margin="0.16,0.10"
+  ];
+
+  edge [
+    fontname="Helvetica",
+    fontsize=10,
+    color="#64748b",
+    arrowsize=0.8,
+    penwidth=1.2
+  ];
+
+  subgraph cluster_inputs {
+    label="User Inputs";
+    color="#bfdbfe";
+    fillcolor="#eff6ff";
+    style="rounded,filled";
+
+    figma_link [label="Figma link\n(fileKey + nodeId)"];
+    flow_description [label="Flow description\n(user intent)"];
+  }
+
+  subgraph cluster_figma_mcp {
+    label="Figma MCP";
+    color="#c4b5fd";
+    fillcolor="#f5f3ff";
+    style="rounded,filled";
+
+    design_context [label="Design context\n(layout, colors, typography,\nspacing, components)"];
+    figma_screenshot [label="Figma screenshot\n(visual source of truth)"];
+    figma_assets [label="Assets\n(images, icons, SVGs)"];
+  }
+
+  subgraph cluster_orchestrator {
+    label="Orchestrator";
+    color="#cbd5e1";
+    fillcolor="#f8fafc";
+    style="rounded,filled";
+
+    skill_orchestrator [
+      label="Skill orchestrator\n(SKILL.md — 9 phases)",
+      fillcolor="#0f172a",
+      fontcolor="white",
+      color="#0f172a"
+    ];
+    prompt_builder [label="Prompt builder\n(orchestrator/prompt_builder)"];
+    prompt_templates [label="Prompt templates\n(subagents/*.md)"];
+    confidence_gate [label="Confidence gate\n(98% threshold\nacross 5 dimensions)"];
+  }
+
+  subgraph cluster_analysis {
+    label="Design Analysis";
+    color="#a7f3d0";
+    fillcolor="#ecfdf5";
+    style="rounded,filled";
+
+    deep_analysis [label="Deep design analysis\n(structure, visual props,\ninteractions, content)"];
+    design_analysis_doc [
+      label="Design analysis\ndocument",
+      shape=note,
+      fillcolor="#ffffff"
+    ];
+  }
+
+  subgraph cluster_planning {
+    label="Planning Loop";
+    color="#bbf7d0";
+    fillcolor="#f0fdf4";
+    style="rounded,filled";
+
+    planner [label="Planning subagent\n(subskills/design-planning)"];
+    implementation_plan [
+      label="Implementation plan\n(components, tokens,\ntasks, validation)",
+      shape=note,
+      fillcolor="#ffffff"
+    ];
+    plan_editor [label="Fresh plan editor"];
+  }
+
+  subgraph cluster_testing {
+    label="Testing Strategy";
+    color="#e9d5ff";
+    fillcolor="#faf5ff";
+    style="rounded,filled";
+
+    test_strategist [label="Test strategy subagent\n(Playwright-based)"];
+    test_planner [label="Test plan subagent"];
+    test_plan [
+      label="Playwright test plan\n(viewports, states,\naccessibility)",
+      shape=note,
+      fillcolor="#ffffff"
+    ];
+  }
+
+  subgraph cluster_execution {
+    label="Implementation Loop";
+    color="#fde68a";
+    fillcolor="#fffbeb";
+    style="rounded,filled";
+
+    executor [label="Implementation subagent\n(subskills/design-executing)"];
+    code_artifacts [
+      label="Code changes\n(components, styles,\nassets, tokens)",
+      shape=note,
+      fillcolor="#ffffff"
+    ];
+  }
+
+  subgraph cluster_review {
+    label="Review Loop (Playwright)";
+    color="#fca5a5";
+    fillcolor="#fef2f2";
+    style="rounded,filled";
+
+    reviewer [label="Fresh reviewer\n(Playwright visual comparison)"];
+    impl_screenshot [
+      label="Implementation\nscreenshots",
+      shape=note,
+      fillcolor="#ffffff"
+    ];
+    comparison [label="Side-by-side\ncomparison"];
+  }
+
+  subgraph cluster_finish {
+    label="Finish";
+    color="#fecdd3";
+    fillcolor="#fff1f2";
+    style="rounded,filled";
+
+    finisher [label="Finishing workflow\n(subskills/design-finishing)"];
+    completion_report [
+      label="Completion report\n(rounds, files, viewports,\nresidual issues)",
+      shape=note,
+      fillcolor="#ffffff"
+    ];
+  }
+
+  loop_legend [
+    label="Dashed arrows = repeat on review findings",
+    shape=note,
+    fillcolor="#fff7ed",
+    color="#d97706",
+    fontcolor="#9a3412"
+  ];
+
+  // Input flow
+  figma_link -> skill_orchestrator [label="fileKey + nodeId"];
+  flow_description -> skill_orchestrator [label="user intent"];
+
+  // Figma MCP fetch
+  skill_orchestrator -> design_context [label="get_figma_data()"];
+  skill_orchestrator -> figma_screenshot [label="get_screenshot()"];
+  skill_orchestrator -> figma_assets [label="download_figma_images()"];
+
+  // Analysis
+  design_context -> deep_analysis [label="structured data"];
+  figma_screenshot -> deep_analysis [label="visual reference"];
+  deep_analysis -> design_analysis_doc [label="analysis output"];
+  design_analysis_doc -> confidence_gate [label="score understanding"];
+
+  // Planning
+  prompt_templates -> prompt_builder [label="template text"];
+  design_analysis_doc -> prompt_builder [label="analysis context"];
+  prompt_builder -> planner [label="planning prompt"];
+  planner -> implementation_plan [label="proposed plan"];
+  implementation_plan -> plan_editor [label="review input"];
+  prompt_builder -> plan_editor [label="edit prompt"];
+  plan_editor -> planner [
+    label="findings\n(fresh round, up to 5)",
+    style=dashed,
+    color="#d97706",
+    fontcolor="#b45309"
+  ];
+
+  // Testing
+  implementation_plan -> test_strategist [label="plan context"];
+  design_analysis_doc -> test_strategist [label="design context"];
+  test_strategist -> test_planner [label="approved strategy"];
+  implementation_plan -> test_planner [label="plan details"];
+  test_planner -> test_plan [label="concrete test plan"];
+
+  // Execution
+  implementation_plan -> executor [label="approved tasks"];
+  test_plan -> executor [label="test plan"];
+  figma_screenshot -> executor [label="visual reference"];
+  prompt_builder -> executor [label="execution prompt"];
+  executor -> code_artifacts [label="implemented code"];
+
+  // Review
+  code_artifacts -> reviewer [label="review input"];
+  reviewer -> impl_screenshot [label="playwright_screenshot()"];
+  figma_screenshot -> comparison [label="Figma reference"];
+  impl_screenshot -> comparison [label="implementation"];
+  comparison -> reviewer [label="visual diff"];
+  reviewer -> executor [
+    label="critical/major findings\n(fix round, up to 8)",
+    style=dashed,
+    color="#d97706",
+    fontcolor="#b45309"
+  ];
+
+  // Finish
+  reviewer -> finisher [label="no critical/major issues"];
+  finisher -> completion_report [label="collect facts"];
+}
