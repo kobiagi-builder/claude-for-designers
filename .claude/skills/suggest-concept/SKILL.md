@@ -134,6 +134,57 @@ Aim for 4-6 solid references. These become the inspiration citations in your fin
 
 ---
 
+## Phase 3.5: Select Visual References
+
+Before designing, consult the curated visual reference library bundled with this skill. These are real screenshots from best-in-class products organized by vertical, giving you concrete visual anchors for each concept — not just ideas in the abstract, but proven layouts and patterns you can study and draw from.
+
+### How to select references
+
+1. **Read the reference index** at `references/INDEX.md` (relative to this skill's directory). It contains:
+   - 15 verticals (fintech, healthtech, ecommerce, saas-dashboards, social, marketplace, edtech, travel, productivity, crm, analytics, developer-tools, media-streaming, food-delivery, fitness)
+   - 3 products per vertical with descriptions of their design strengths
+   - A **Quick Reference: Pattern Lookup** table at the bottom for finding products by UI pattern type
+
+2. **Match the user's concept to verticals and patterns.** Consider:
+   - **Primary vertical**: Which vertical is the user's product closest to? (e.g., a habit tracker → fitness or productivity)
+   - **Secondary verticals**: What adjacent verticals share relevant patterns? (e.g., a health habit tracker might borrow gamification from edtech/Duolingo)
+   - **UI pattern needs**: What specific patterns does this concept need? (dashboard, feed, search, onboarding, pricing, etc.) Use the Pattern Lookup table.
+
+3. **Select 3-6 reference products** — at least one per concept you'll design. For each concept, pick the reference(s) whose structural approach most closely matches the direction you're planning.
+
+4. **View the screenshots.** Each product folder contains 3 PNG screenshots (homepage, feature page, pricing/detail). Read them to understand:
+   - Layout structure and grid usage
+   - Visual hierarchy and spacing rhythm
+   - Color application and contrast
+   - Typography scale and weight usage
+   - Component patterns (cards, lists, navigation)
+
+   Screenshot paths follow this pattern:
+   ```
+   references/[vertical]/[product-name]/[page-label].png
+   ```
+
+### How to use references when designing
+
+- **Don't copy layouts wholesale** — use them as structural inspiration. If Airbnb's card grid works well for discovery, understand *why* (scannable, filterable, image-forward) and apply that reasoning to the user's domain.
+- **Cite your references** in the concept presentation (Phase 6). For each concept, list which products inspired it and what specific patterns you borrowed.
+- **Cross-pollinate between verticals.** The best concepts often borrow patterns from unexpected places — e.g., applying Duolingo's gamification to a CRM, or Spotify's discovery feed to an analytics dashboard.
+- **Prioritize references that match the user's stated mood/feel.** If the user wants "clean and minimal," lean toward Mercury, Linear, Todoist. If they want "dense and powerful," look at Mixpanel, HubSpot, GitHub.
+
+### Reference selection for each concept
+
+When planning your 3 concepts, assign specific references to each:
+
+```
+Concept 1: [Name] — References: [Product A] (for layout), [Product B] (for interaction)
+Concept 2: [Name] — References: [Product C] (for navigation), [Product D] (for data display)
+Concept 3: [Name] — References: [Product E] (for onboarding), [Product F] (for visual style)
+```
+
+This ensures each concept is grounded in real, proven design rather than abstract ideas.
+
+---
+
 ## Phase 4: Design 3 Concepts
 
 Now create three genuinely distinct design concepts. The key word is **distinct** — not three color variations of the same layout, but three fundamentally different approaches to solving the user's problem.
@@ -160,6 +211,7 @@ For each concept:
 2. **Build it as code** using the project's default tech stack (Next.js + Tailwind CSS + shadcn/ui + TypeScript):
    - Create a separate route for each concept (e.g., `/concept-1`, `/concept-2`, `/concept-3`)
    - Use the design system tokens from Phase 2 for all colors, typography, spacing
+   - **Study your assigned visual references** from Phase 3.5 — open the screenshots and use them as structural guides for layout, spacing rhythm, and component patterns
    - Include realistic mock data — no lorem ipsum
    - Make interactive elements functional (tabs switch, buttons respond, etc.)
    - Focus on the key screens/states that communicate the concept's approach
@@ -205,9 +257,9 @@ Present all three concepts to the user in a clear, structured comparison. For ea
 
 **Approach**: [1-2 sentence summary of the structural/UX approach]
 
-**Inspired by**:
-- [Product/pattern name] — [what was borrowed and why]
-- [Product/pattern name] — [what was borrowed and why]
+**Visual references used**:
+- [Product name] (`references/[vertical]/[product]/[screenshot].png`) — [what pattern was borrowed and why]
+- [Product name] (`references/[vertical]/[product]/[screenshot].png`) — [what pattern was borrowed and why]
 
 **Pros**:
 - [Strength 1]
