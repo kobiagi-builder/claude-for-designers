@@ -12,6 +12,7 @@ This skill provides a structured workflow for translating Figma designs into pro
 
 ## Prerequisites
 
+- **Design system rules must exist.** Before doing anything else, check if `.claude/rules/design-system.md` and `.claude/rules/styleguide.md` exist. If either file is missing, invoke the `prep-environment` agent (`.claude/agents/prep-environment/AGENT.md`) and wait for it to complete before proceeding. These files contain the user's design tokens, component specs, and interaction patterns — they are essential for accurate implementation.
 - Figma MCP server must be connected and accessible
 - User must provide a Figma URL in the format: `https://figma.com/design/:fileKey/:fileName?node-id=1-2`
   - `:fileKey` is the file key
@@ -303,6 +304,8 @@ Compare each screenshot against the corresponding Figma frame. Only proceed when
 
 ### Design System Integration
 
+- **Read `.claude/rules/design-system.md`** for all color, typography, spacing, shadow, and radius values. Use these tokens instead of hardcoding values from Figma.
+- **Read `.claude/rules/styleguide.md`** for component specifications. When implementing a button, input, card, or any documented component, match the variants, sizes, states, and interaction patterns defined in the styleguide.
 - ALWAYS use components from the project's design system when possible
 - Map Figma design tokens to project design tokens
 - When a matching component exists, extend it rather than creating a new one

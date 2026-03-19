@@ -1,6 +1,6 @@
 ---
-name: prep
-description: Interactive setup wizard that configures Figma and Playwright MCP servers for new users. Uses Figma OAuth (no API key needed) and writes the project .mcp.json automatically.
+name: configure-mcps
+description: Interactive setup wizard that configures Figma and Playwright MCP servers for new users. Uses Figma OAuth (no API key needed) and writes the project .mcp.json automatically. Use when the user says "configure mcps", "setup", "configure", "prep", or "my MCP isn't working".
 ---
 
 # Project Setup Wizard
@@ -11,7 +11,7 @@ This skill configures the MCP servers (Figma + Playwright) so the design-to-code
 
 - After cloning the repo for the first time
 - When MCP servers are not working or missing
-- When the user says "prep", "setup", "configure", or "my MCP isn't working"
+- When the user says "configure mcps", "prep", "setup", "configure", or "my MCP isn't working"
 
 ## Workflow
 

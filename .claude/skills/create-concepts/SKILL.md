@@ -1,6 +1,6 @@
 ---
-name: suggest-concept
-description: Generates 3 distinct design concepts from a user's raw idea or mind dump. Researches best practices and successful similar products online, then builds each concept as code, pushes them to Figma as editable layers, and presents a comparison with pros/cons and references. Use this skill when the user has an idea, feature request, product concept, or mind dump they want to explore visually. Trigger phrases include "suggest concept", "explore ideas", "concept options", "design concepts", "I have an idea for", "brainstorm designs", "what could this look like", or any time the user describes a product idea and wants to see visual directions. Also use when the user says "I'm thinking about", "what if we built", or shares a rough idea and wants to see it materialized as design options. Requires Figma MCP and Playwright MCP connections.
+name: create-concepts
+description: Generates 3 distinct design concepts from a user's raw idea or mind dump. Researches best practices and successful similar products online, then builds each concept as code, pushes them to Figma as editable layers, and presents a comparison with pros/cons and references. Use this skill when the user has an idea, feature request, product concept, or mind dump they want to explore visually. Trigger phrases include "create concepts", "suggest concept", "explore ideas", "concept options", "design concepts", "I have an idea for", "brainstorm designs", "what could this look like", or any time the user describes a product idea and wants to see visual directions. Also use when the user says "I'm thinking about", "what if we built", or shares a rough idea and wants to see it materialized as design options. Requires Figma MCP and Playwright MCP connections.
 ---
 
 # Suggest Concept
@@ -9,6 +9,7 @@ Turn a raw idea into 3 distinct, research-backed design concepts — built as co
 
 ## Prerequisites
 
+- **Design system rules must exist.** Before doing anything else, check if `.claude/rules/design-system.md` and `.claude/rules/styleguide.md` exist. If either file is missing, invoke the `prep-environment` agent (`.claude/agents/prep-environment/AGENT.md`) and wait for it to complete before proceeding. These files are used in Phase 2 instead of manual extraction.
 - **Figma MCP** connected (for pushing concepts to Figma via `generate_figma_design`)
 - **Playwright MCP** connected (for running the dev server and capturing UI)
 - **Web search** available (for researching best practices and competitors)
@@ -38,69 +39,20 @@ When you're confident you understand the idea well enough to research and design
 
 ---
 
-## Phase 2: Establish the Design System
+## Phase 2: Load the Design System
 
-Every concept must follow the user's design system so they feel cohesive with the rest of the product. Before researching or designing, lock down the visual foundation.
+Every concept must follow the user's design system so they feel cohesive with the rest of the product.
 
-### If the user has an existing design system
+Read both `.claude/rules/design-system.md` and `.claude/rules/styleguide.md`. These files were created by the `prep-environment` agent and contain the complete design system — colors, typography, spacing, shadows, border radii, component specs, interaction patterns, and layout conventions.
 
-Ask: "Where's your design system? A Figma link or a style guide works."
+Use these values for all concepts:
+- **Colors**: Use exact hex/rgba values from the design system
+- **Typography**: Use the documented font families, sizes, weights, and line heights
+- **Spacing**: Follow the documented spacing scale
+- **Components**: Match the component variants, sizes, and states from the styleguide
+- **Interactions**: Follow hover, focus, active, and disabled patterns from the styleguide
 
-Once you have the link:
-1. Use `mcp__figma__get_figma_data` to fetch the design system's colors, typography, spacing, and components
-2. Extract the key tokens: color palette, font families, font sizes/weights, spacing scale, border radii, shadows
-3. Document these in `.claude/rules/design-system-tokens.md` so all concepts (and future work) use them consistently
-
-### If the user doesn't have a formal design system
-
-Ask: "Can you share 2-3 Figma screens from your existing product? I'll extract the design patterns from them."
-
-Then:
-1. Fetch each screen's design data via Figma MCP
-2. Identify the recurring patterns: primary/secondary colors, fonts, spacing rhythm, component styles, radius/shadow conventions
-3. Document the extracted system in `.claude/rules/design-system-tokens.md`
-
-### What to document in design-system-tokens.md
-
-```markdown
-# Design System Tokens
-
-## Colors
-- Primary: #XXXXXX
-- Secondary: #XXXXXX
-- Background: #XXXXXX
-- Surface: #XXXXXX
-- Text primary: #XXXXXX
-- Text secondary: #XXXXXX
-- Border: #XXXXXX
-- Error/Success/Warning: ...
-
-## Typography
-- Font family: [name]
-- Headings: [sizes, weights, line-heights]
-- Body: [sizes, weights, line-heights]
-- Captions/labels: ...
-
-## Spacing
-- Base unit: Xpx
-- Scale: [4, 8, 12, 16, 24, 32, 48, 64] or whatever the pattern is
-
-## Border Radius
-- Small: Xpx
-- Medium: Xpx
-- Large: Xpx
-
-## Shadows
-- Card: ...
-- Dropdown: ...
-- Modal: ...
-
-## Components
-- Button styles (primary, secondary, ghost)
-- Card patterns
-- Input styles
-- Any other recurring components
-```
+If the files feel incomplete for the concepts you're building (e.g., the user's design system doesn't cover a component type you need), note what's missing and make reasonable choices that are consistent with the existing system's visual language.
 
 ---
 

@@ -31,6 +31,7 @@ If the project doesn't have these set up yet, the implementation subagent must i
 
 ## Prerequisites
 
+- **Design system rules must exist.** Before doing anything else, check if `.claude/rules/design-system.md` and `.claude/rules/styleguide.md` exist. If either file is missing, invoke the `prep-environment` agent (`.claude/agents/prep-environment/AGENT.md`) and wait for it to complete before proceeding. These files contain the user's design tokens, component specs, and interaction patterns — they are essential for accurate implementation. Read both files before starting any design work.
 - Figma MCP server must be connected and accessible
 - Playwright MCP must be connected for visual validation
 - A dev server must be running or startable for Playwright screenshots

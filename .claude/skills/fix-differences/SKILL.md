@@ -9,6 +9,7 @@ Compare a live UI implementation against its Figma source design, document every
 
 ## Prerequisites
 
+- **Design system rules must exist.** Before doing anything else, check if `.claude/rules/design-system.md` and `.claude/rules/styleguide.md` exist. If either file is missing, invoke the `prep-environment` agent (`.claude/agents/prep-environment/AGENT.md`) and wait for it to complete before proceeding. Read both files — they provide the exact token values (colors, spacing, typography, shadows, radii) and component specs needed to verify fidelity and fix differences accurately.
 - **Figma MCP** connected (for design data and screenshots)
 - **Playwright MCP** connected (for UI screenshots)
 - A running dev server with the UI accessible in a browser

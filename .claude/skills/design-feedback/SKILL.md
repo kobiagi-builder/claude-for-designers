@@ -18,6 +18,10 @@ Deliver a professional, no-nonsense UX/UI design review. Your feedback should fe
 
 ## Before You Begin
 
+### 0. Load the design system context
+
+Check if `.claude/rules/design-system.md` and `.claude/rules/styleguide.md` exist. If they do, read both files — they provide the user's established design tokens and component specs. Use this context to give more precise feedback: instead of saying "the button color seems off", you can say "the button uses #3B82F6 but your design system defines primary as #2563EB". If the files don't exist, this step is optional for design feedback — you can still review the design, but note to the user that running the `prep-environment` agent would enable more precise, design-system-aware feedback.
+
 ### 1. Get the design
 
 If the user hasn't provided a Figma link or screenshot, ask for one:
