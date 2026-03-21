@@ -18,9 +18,11 @@ Deliver a professional, no-nonsense UX/UI design review. Your feedback should fe
 
 ## Before You Begin
 
-### 0. Load the design system context
+### 0. Load the design system and brand voice context
 
-Check if `.claude/rules/design-system.md` and `.claude/rules/styleguide.md` exist. If they do, read both files — they provide the user's established design tokens and component specs. Use this context to give more precise feedback: instead of saying "the button color seems off", you can say "the button uses #3B82F6 but your design system defines primary as #2563EB". If the files don't exist, this step is optional for design feedback — you can still review the design, but note to the user that running the `prep-environment` agent would enable more precise, design-system-aware feedback.
+**Design system**: Check if `.claude/rules/design-system.md` and `.claude/rules/styleguide.md` exist. If they do, read both files — they provide the user's established design tokens and component specs. Use this context to give more precise feedback: instead of saying "the button color seems off", you can say "the button uses #3B82F6 but your design system defines primary as #2563EB". If the files don't exist, this step is optional for design feedback — you can still review the design, but note to the user that running the `prep-environment` agent would enable more precise, design-system-aware feedback.
+
+**Brand voice**: Read `.claude/skills/ux-writing/brand-voice.md`. If it has content, use it to evaluate ALL copy in the design against the established brand voice — button labels, headings, descriptions, error messages, empty states, tooltips, navigation items, and microcopy. When flagging copy issues, provide specific rewrites that follow the brand voice and the `ux-writing` skill's five principles (Clear, Useful, Concise, Consistent, Human). If `brand-voice.md` is empty, you can still review copy for general UX writing best practices, but note to the user that setting up their brand voice (via the `ux-writing` skill) would enable more precise, on-brand copy feedback.
 
 ### 1. Get the design
 
@@ -135,7 +137,7 @@ Things to call out without hesitation:
 
 ### Detailed Category Review
 
-Review the design across these 10 categories. For each, give a direct assessment — what works, what doesn't, and what to fix. Skip categories that aren't relevant to the user's requested scope.
+Review the design across these 11 categories. For each, give a direct assessment — what works, what doesn't, and what to fix. Skip categories that aren't relevant to the user's requested scope.
 
 #### 1. Visual Hierarchy
 - What draws attention first — is it the right thing?
@@ -191,7 +193,17 @@ Review the design across these 10 categories. For each, give a direct assessment
 - Color-only indicators (bad for colorblind users)
 - Keyboard navigation considerations
 
-#### 10. Product Thinking
+#### 10. UX Copy and Microcopy
+- Are button labels specific and action-oriented? ("Save changes" not "Submit", "Delete project" not "OK")
+- Do error messages follow What happened + Why + How to fix structure?
+- Are empty states helpful (What + Why empty + How to start) or just blank?
+- Is terminology consistent across the screen? (don't use "Delete" in one place and "Remove" in another for the same action)
+- Does the copy match the brand voice from `brand-voice.md`?
+- Are labels clear and scannable? Would a user understand them on first read?
+- Are there any "robot voice" patterns? ("Your request has been processed" vs "Done! Changes saved")
+- Provide specific rewrites for any copy that falls short — don't just say "copy could be better"
+
+#### 11. Product Thinking
 - Does the design support real user goals?
 - Does the experience align with likely user intent?
 - Does the screen help decision-making or just display data?

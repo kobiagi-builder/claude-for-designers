@@ -137,6 +137,22 @@ This ensures each concept is grounded in real, proven design rather than abstrac
 
 ---
 
+## Phase 3.7: Load Brand Voice for UX Copy
+
+Before writing any text content for the concepts, load the `ux-writing` skill's brand voice context.
+
+1. Read `.claude/skills/ux-writing/brand-voice.md`
+2. **If it has content** — use it as the guide for ALL text in the concepts: headings, button labels, descriptions, empty states, navigation items, tooltips, placeholder text, and microcopy. Every word in the UI is a design decision and must match the brand voice.
+3. **If it's empty** — ask the user to set it up before proceeding. They can either:
+   - Provide a Figma link to 3-5 existing screens so you can analyze the copy patterns and populate `brand-voice.md` (follow the extraction process in the `ux-writing` skill)
+   - Fill in `brand-voice.md` manually with their brand guidelines
+
+Do not proceed to Phase 4 until a brand voice is available. Concepts without on-brand copy feel generic and undermine the entire exercise.
+
+When writing copy for each concept, apply the `ux-writing` skill's five principles (Clear, Useful, Concise, Consistent, Human) and copy patterns (CTAs start with verbs, error messages follow What+Why+Fix structure, empty states follow What+Why+Action structure, etc.). Make the copy distinctions match the concept distinctions — a bold concept gets bold copy, a minimal concept gets spare copy.
+
+---
+
 ## Phase 4: Design 3 Concepts
 
 Now create three genuinely distinct design concepts. The key word is **distinct** — not three color variations of the same layout, but three fundamentally different approaches to solving the user's problem.
